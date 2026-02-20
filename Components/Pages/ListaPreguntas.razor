@@ -3,43 +3,91 @@
 @using CienEstudiantesDijeron.Models
 @inject ApplicationDbContext DbContext
 
-<h3>Lista de Preguntas y Respuestas</h3>
+<PageTitle>Lista de Preguntas</PageTitle>
 
-@if (preguntas == null)
-{
-    <p>Cargando...</p>
-}
-else
-{
-    <ul>
-        @foreach (var pregunta in preguntas)
-        {
-            <li>@pregunta.pr_id - @pregunta.pr_pregunta</li>
-        }
-    </ul>
-}
+@* === ENCABEZADO === *@
+<div class="d-flex flex-column mb-8">
+    <MudText Typo="Typo.h2" Color="Color.Primary" Style="font-weight: bold; text-transform: uppercase;">
+        Lista de Preguntas y Respuestas
+    </MudText>
+</div>
 
+@* === SECCIÓN DE PREGUNTAS (Estilo Cian) === *@
+<MudPaper Elevation="8" Class="pa-6 rounded-lg mb-8" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #79F2F2;">
+    <MudText Typo="Typo.h4" Color="Color.Info" Class="mb-6" Style="font-weight: bold;">
+        Preguntas Registradas
+    </MudText>
 
-@if (respuestas == null)
-{
-    <p>Cargando respuestas...</p>
-}
-else
-{
-    <ul>
-        @foreach (var respuesta in respuestas)
-        {
-            <li>@respuesta.res_id - @respuesta.res_respuesta - @respuesta.res_cantidad</li>
-        }
-    </ul>
-}
+    @if (preguntas == null)
+    {
+        <div class="d-flex justify-center my-4">
+            <MudProgressCircular Color="Color.Info" Indeterminate="true" />
+        </div>
+    }
+    else
+    {
+        <MudSimpleTable Style="background-color: rgba(0,0,0,0.2); border: 1px solid #79F2F2;" Class="rounded-lg">
+            <thead>
+                <tr>
+                    <th><MudText Typo="Typo.h6" Color="Color.Info" Style="font-weight: bold;">ID</MudText></th>
+                    <th><MudText Typo="Typo.h6" Color="Color.Info" Style="font-weight: bold;">Pregunta</MudText></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pregunta in preguntas)
+                {
+                    <tr>
+                        <td><MudText Style="color: white; font-weight: bold;">@pregunta.pr_id</MudText></td>
+                        <td><MudText Style="color: white;">@pregunta.pr_pregunta</MudText></td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    }
+</MudPaper>
+
+@* === SECCIÓN DE RESPUESTAS (Estilo Rosa Neón) === *@
+<MudPaper Elevation="8" Class="pa-6 rounded-lg mb-8" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #D93DAF;">
+    <MudText Typo="Typo.h4" Color="Color.Secondary" Class="mb-6" Style="font-weight: bold;">
+        Respuestas Registradas
+    </MudText>
+
+    @if (respuestas == null)
+    {
+        <div class="d-flex justify-center my-4">
+            <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+        </div>
+    }
+    else
+    {
+        <MudSimpleTable Style="background-color: rgba(0,0,0,0.2); border: 1px solid #D93DAF;" Class="rounded-lg">
+            <thead>
+                <tr>
+                    <th><MudText Typo="Typo.h6" Color="Color.Secondary" Style="font-weight: bold;">ID</MudText></th>
+                    <th><MudText Typo="Typo.h6" Color="Color.Secondary" Style="font-weight: bold;">Respuesta</MudText></th>
+                    <th><MudText Typo="Typo.h6" Color="Color.Secondary" Style="font-weight: bold;">Puntos</MudText></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var respuesta in respuestas)
+                {
+                    <tr>
+                        <td><MudText Style="color: white; font-weight: bold;">@respuesta.res_id</MudText></td>
+                        <td><MudText Style="color: white;">@respuesta.res_respuesta</MudText></td>
+                        <td><MudText Style="color: #FFFF00; font-weight: bold;">@respuesta.res_cantidad pts</MudText></td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    }
+</MudPaper>
 
 @code {
     private List<Pregunta>? preguntas;
-
     private List<Respuesta>? respuestas;
 
-    protected override async Task OnInitializedAsync()
+    // Cambiado de OnInitializedAsync a OnInitialized para evitar el warning CS1998
+    protected override void OnInitialized()
     {
         preguntas = DbContext.Preguntas.ToList();
         respuestas = DbContext.Respuestas.ToList();

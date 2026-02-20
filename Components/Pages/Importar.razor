@@ -5,90 +5,152 @@
 
 <PageTitle>Importar Contenido</PageTitle>
 
-<h3>Importar Preguntas y Respuestas</h3>
+@* === ENCABEZADO === *@
+<div class="d-flex flex-column mb-8">
+    <MudText Typo="Typo.h2" Color="Color.Primary" Style="font-weight: bold; text-transform: uppercase;">
+        Importar Preguntas y Respuestas
+    </MudText>
+</div>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0">¿Cómo preparar tu archivo?</h5>
+<MudGrid Spacing="6">
+    
+    @* === COLUMNA IZQUIERDA: INSTRUCCIONES === *@
+    <MudItem xs="12" md="6">
+        <MudPaper Elevation="8" Class="pa-6 rounded-lg h-100" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #79F2F2;">
+            
+            <div class="d-flex align-center mb-6">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info" Size="Size.Large" Class="mr-3" />
+                <MudText Typo="Typo.h4" Color="Color.Info" Style="font-weight: bold;">
+                    ¿Cómo preparar tu archivo?
+                </MudText>
             </div>
-            <div class="card-body">
-                <p>El archivo debe ser un formato <strong>.CSV</strong> (delimitado por comas) con la siguiente estructura:</p>
+            
+            <MudText Typo="Typo.body1" Style="color: white;" Class="mb-4">
+                El archivo debe ser un formato <strong>.CSV</strong> (delimitado por comas) con la siguiente estructura:
+            </MudText>
+
+            @* Tabla de Ejemplo *@
+            <MudSimpleTable Style="background-color: rgba(0,0,0,0.3); border: 1px solid #79F2F2;" Class="rounded-lg mb-6">
+                <thead>
+                    <tr>
+                        <th><MudText Color="Color.Info" Style="font-weight: bold;">Pregunta</MudText></th>
+                        <th><MudText Color="Color.Info" Style="font-weight: bold;">Respuesta</MudText></th>
+                        <th><MudText Color="Color.Info" Style="font-weight: bold;">Puntos</MudText></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><MudText Style="color: white;">¿Color favorito?</MudText></td>
+                        <td><MudText Style="color: white;">Azul</MudText></td>
+                        <td><MudText Style="color: #FFFF00; font-weight: bold;">40</MudText></td>
+                    </tr>
+                    <tr>
+                        <td><MudText Style="color: white;">¿Color favorito?</MudText></td>
+                        <td><MudText Style="color: white;">Rojo</MudText></td>
+                        <td><MudText Style="color: #FFFF00; font-weight: bold;">30</MudText></td>
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
+
+            @* Advertencias *@
+            <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined" Style="border-color: #FFFF00; color: #FFFF00; background-color: rgba(255, 255, 0, 0.05);">
+                <ul style="margin: 0; padding-left: 15px;">
+                    <li>Los encabezados deben llamarse exactamente: <strong>Pregunta, Respuesta, Puntos</strong>.</li>
+                    <li>Repite la misma pregunta para cada una de sus respuestas.</li>
+                    <li>Asegúrate de guardar el archivo como <strong>CSV (delimitado por comas)</strong> desde Excel.</li>
+                </ul>
+            </MudAlert>
+            
+        </MudPaper>
+    </MudItem>
+
+    @* === COLUMNA DERECHA: SUBIDA DE ARCHIVO === *@
+    <MudItem xs="12" md="6">
+        <MudPaper Elevation="8" Class="pa-6 rounded-lg h-100 d-flex flex-column" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #D93DAF;">
+            
+            <div class="d-flex align-center mb-6">
+                <MudIcon Icon="@Icons.Material.Filled.UploadFile" Color="Color.Secondary" Size="Size.Large" Class="mr-3" />
+                <MudText Typo="Typo.h4" Color="Color.Secondary" Style="font-weight: bold;">
+                    Selecciona tu archivo
+                </MudText>
+            </div>
+
+            @* Zona de carga personalizada (Ocultamos el feo InputFile original) *@
+            <div class="d-flex flex-column align-center justify-center pa-8 mb-6" style="border: 2px dashed #8124BF; border-radius: 12px; background-color: rgba(0,0,0,0.3); min-height: 200px;">
                 
-                <table class="table table-sm table-bordered bg-light">
-                    <thead>
-                        <tr class="table-secondary">
-                            <th>Pregunta</th>
-                            <th>Respuesta</th>
-                            <th>Puntos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>¿Color favorito?</td>
-                            <td>Azul</td>
-                            <td>40</td>
-                        </tr>
-                        <tr>
-                            <td>¿Color favorito?</td>
-                            <td>Rojo</td>
-                            <td>30</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="alert alert-warning small">
-                    <ul>
-                        <li>Los encabezados deben llamarse exactamente: <strong>Pregunta, Respuesta, Puntos</strong>.</li>
-                        <li>Repite la misma pregunta para cada una de sus respuestas.</li>
-                        <li>Asegúrate de guardar el archivo como <strong>CSV (delimitado por comas)</strong> desde Excel.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="card shadow-sm p-4">
-            <div class="mb-3">
-                <label class="form-label fw-bold">Selecciona tu archivo</label>
-                <InputFile OnChange="CargarArchivoMemoria" class="form-control" accept=".csv" />
-            </div>
-
-            <button class="btn btn-primary w-100" @onclick="ProcesarArchivo" disabled="@(archivoSeleccionado == null || estaCargando)">
-                @if (estaCargando)
+                <InputFile id="fileInput" OnChange="CargarArchivoMemoria" accept=".csv" hidden />
+                
+                <MudButton HtmlTag="label" 
+                           for="fileInput" 
+                           Variant="Variant.Filled" 
+                           Color="Color.Tertiary" 
+                           StartIcon="@Icons.Material.Filled.AttachFile" 
+                           Size="Size.Large"
+                           Style="font-weight: bold; padding: 10px 24px;">
+                    EXPLORAR ARCHIVOS
+                </MudButton>
+                
+                @if (archivoSeleccionado != null)
                 {
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    <span> Procesando...</span>
+                    <MudText Typo="Typo.subtitle1" Style="color: #79F2F2; font-weight: bold;" Class="mt-4 d-flex align-center">
+                        <MudIcon Icon="@Icons.Material.Filled.FilePresent" Class="mr-2" />
+                        @archivoSeleccionado.Name
+                    </MudText>
                 }
                 else
                 {
-                    <span>🚀 Subir a Base de Datos</span>
+                    <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.5);" Class="mt-4">
+                        Ningún archivo seleccionado
+                    </MudText>
                 }
-            </button>
+            </div>
 
+            <MudSpacer />
+
+            @* Botón de Subida a BD *@
+            <MudButton Variant="Variant.Filled" 
+                       Color="Color.Primary" 
+                       Size="Size.Large" 
+                       OnClick="ProcesarArchivo" 
+                       Disabled="@(archivoSeleccionado == null || estaCargando)"
+                       Style="height: 60px; font-weight: bold; font-size: 1.2rem; border-radius: 8px;">
+                @if (estaCargando)
+                {
+                    <MudProgressCircular Class="ms-n1 mr-3" Size="Size.Small" Indeterminate="true" />
+                    <span>PROCESANDO...</span>
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Storage" Class="mr-2" />
+                    <span>SUBIR A BASE DE DATOS</span>
+                }
+            </MudButton>
+
+            @* Mensajes de Estado (Reemplazan la clase de bootstrap y usan Severity de MudBlazor) *@
             @if (!string.IsNullOrEmpty(mensaje))
             {
-                <div class="mt-3 alert @claseMensaje animate__animated animate__fadeIn">
+                <MudAlert Severity="@gravedadMensaje" Class="mt-6" Variant="Variant.Filled" Style="font-weight: bold;">
                     @mensaje
-                </div>
+                </MudAlert>
             }
-        </div>
-    </div>
-</div>
+
+        </MudPaper>
+    </MudItem>
+</MudGrid>
 
 @code {
     private IBrowserFile? archivoSeleccionado;
     private bool estaCargando = false;
     private string mensaje = "";
-    private string claseMensaje = "alert-info";
+    
+    // Usamos el enumerador nativo de MudBlazor para controlar iconos y colores de alerta
+    private Severity gravedadMensaje = Severity.Info;
 
     private void CargarArchivoMemoria(InputFileChangeEventArgs e)
     {
         archivoSeleccionado = e.File;
-        mensaje = $"📁 Archivo listo: {archivoSeleccionado.Name}";
-        claseMensaje = "alert-info";
+        mensaje = $"Archivo listo para importar: {archivoSeleccionado.Name}";
+        gravedadMensaje = Severity.Info;
         StateHasChanged(); 
     }
 
@@ -98,22 +160,25 @@
 
         estaCargando = true;
         mensaje = "Procesando datos en el servidor...";
+        gravedadMensaje = Severity.Info;
+        StateHasChanged(); 
         
         try {
             using var stream = archivoSeleccionado.OpenReadStream(maxAllowedSize: 1024 * 5120);
             await ImportService.ImportarPreguntasCsv(stream);
             
-            mensaje = "✅ ¡Importación completada! Los datos ya están en SQLite.";
-            claseMensaje = "alert-success";
+            mensaje = "¡Importación completada! Los datos ya están listos en la base de datos.";
+            gravedadMensaje = Severity.Success;
             archivoSeleccionado = null;
         }
         catch (Exception ex) {
-            mensaje = "❌ Error: Verifica que los encabezados del CSV sean correctos.";
-            claseMensaje = "alert-danger";
+            mensaje = "Error de importación: Verifica que los encabezados del CSV sean correctos.";
+            gravedadMensaje = Severity.Error;
             Console.WriteLine(ex.ToString());
         }
         finally {
             estaCargando = false;
+            StateHasChanged(); 
         }
     }
 }

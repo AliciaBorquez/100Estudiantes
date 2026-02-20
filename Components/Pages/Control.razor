@@ -11,266 +11,320 @@
 
 <PageTitle>Control Juego</PageTitle>
 
-<h3>Panel de Control</h3>
-
-@*Boton para abrir el tablero*@
-<button @onclick="AbrirVentana" class="btn btn-secondary">Abrir Tablero</button>
-
-<hr />
-
-@*Seccion de configuracion de la partida*@
-@*Se oculta cuando la partida inicia*@
-<div style="margin-bottom: 20px; display: @(partidaEnCurso ? "none" : "block")">
-    <h4>Configuración de Partida</h4>
-    @*Nombre del equipo 1*@
-    <label>Nombre Equipo 1:</label><br>
-    <input @bind="nombreTmp1" placeholder="Nombre Equipo 1" /><br>
-
-    @*Nombre del equipo 2*@
-    <label>Nombre Equipo 2:</label><br>
-    <input @bind="nombreTmp2" placeholder="Nombre Equipo 2" /><br />
-
-    @*Numero de rondas*@
-    <label>Número de Rondas:</label><br>
-    <input @bind="cantidadRondas" type="number" min="1" /><br><br>
-
-    @*Boton para comenzar la partida, llama al metodo ComenzarPartida*@
-    <button @onclick="ComenzarPartida" class="btn btn-primary">Comenzar Partida</button>
+<div class="d-flex flex-column mb-8">
+    @* Título gigante alineado a la izquierda *@
+    <MudText Typo="Typo.h2" Color="Color.Primary" Style="font-weight: bold;">
+        Panel de Control
+    </MudText>
+    
+    @* Botón vistoso alineado a la izquierda *@
+    <MudButton Variant="Variant.Filled" 
+               Color="Color.Secondary" 
+               Size="Size.Large" 
+               StartIcon="@Icons.Material.Filled.Monitor" 
+               OnClick="AbrirVentana"
+               Class="mt-2"
+               Style="align-self: flex-start; border-radius: 8px; font-weight: bold; padding: 10px 24px;">
+        ABRIR TABLERO
+    </MudButton>
 </div>
 
+@* === 2. CONFIGURACIÓN DE PARTIDA === *@
+@* Usamos un @if limpio en lugar de ocultar por CSS *@
+@if (!partidaEnCurso)
+{
+    <MudPaper Elevation="8" Class="pa-6 rounded-lg mb-8" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #79F2F2;">
+        
+        @* Subtítulo más pequeño que el principal *@
+        <MudText Typo="Typo.h4" Color="Color.Info" Class="mb-6" Style="font-weight: bold;">
+            Configuración de Partida
+        </MudText>
+
+        @* MudGrid coloca automáticamente los inputs en una sola fila horizontal en pantallas grandes *@
+        <MudGrid Spacing="4" Class="align-center">
+            
+            @* Input Equipo 1 *@
+            <MudItem xs="12" md="4">
+                <MudTextField @bind-Value="nombreTmp1" 
+                              Label="Nombre Equipo 1" 
+                              Variant="Variant.Outlined" 
+                              Adornment="Adornment.Start" 
+                              AdornmentIcon="@Icons.Material.Filled.Group" />
+            </MudItem>
+            
+            @* Input Equipo 2 *@
+            <MudItem xs="12" md="4">
+                <MudTextField @bind-Value="nombreTmp2" 
+                              Label="Nombre Equipo 2" 
+                              Variant="Variant.Outlined" 
+                              Adornment="Adornment.Start" 
+                              AdornmentIcon="@Icons.Material.Filled.Group" />
+            </MudItem>
+
+            @* Input Rondas *@
+            <MudItem xs="12" md="4">
+                <MudNumericField @bind-Value="cantidadRondas" 
+                                 Label="Número de Rondas" 
+                                 Min="1" 
+                                 Variant="Variant.Outlined" 
+                                 Adornment="Adornment.Start" 
+                                 AdornmentIcon="@Icons.Material.Filled.FormatListNumbered" />
+            </MudItem>
+            
+        </MudGrid>
+
+        @* Contenedor flex para empujar el botón de comenzar hacia la extrema derecha *@
+        <div class="d-flex justify-end mt-6">
+            <MudButton Variant="Variant.Filled" 
+                       Color="Color.Primary" 
+                       Size="Size.Large" 
+                       EndIcon="@Icons.Material.Filled.SportsEsports" 
+                       OnClick="ComenzarPartida"
+                       Style="border-radius: 8px; font-weight: bold; padding: 12px 30px;">
+                Comenzar Partida
+            </MudButton>
+        </div>
+        
+    </MudPaper>
+}
 @*Seccion de contenido de la partida*@
 @*Solo se muestra cuando hay una partida en curso*@
 @if (partidaEnCurso)
 {
-    <div style="border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
-        @*Seccion final, cuando la partida acaba*@
-        @if (Juego.PartidaTerminada) 
-        {
-            <div style="text-align: center; padding: 30px; background: #f8f9fa; border: 2px dashed #28a745; border-radius: 10px;">
-                <h2 class="text-success">¡PARTIDA FINALIZADA!</h2>
-                <hr />
+    @* === PANTALLA DE PARTIDA FINALIZADA === *@
+    @if (Juego.PartidaTerminada) 
+    {
+        <MudPaper Elevation="8" Class="pa-8 rounded-lg" Style="background-color: rgba(5, 16, 38, 0.8); border: 2px dashed #79F2F2; text-align: center;">
+            <MudText Typo="Typo.h2" Color="Color.Success" Style="font-weight: bold;" Class="mb-4">
+                ¡PARTIDA FINALIZADA!
+            </MudText>
+            
+            <div class="d-flex justify-center mb-6">
+                <MudSimpleTable Style="background-color: rgba(0,0,0,0.4); border: 1px solid #79F2F2; width: 100%; max-width: 400px;" Class="rounded-lg">
+                    <thead>
+                        <tr>
+                            <th><MudText Typo="Typo.h6" Color="Color.Info" Style="font-weight: bold;">Equipo</MudText></th>
+                            <th><MudText Typo="Typo.h6" Color="Color.Info" Style="font-weight: bold;">Puntaje Total</MudText></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="@(Juego.puntosEquipo1 >= Juego.puntosEquipo2 ? "background-color: rgba(121, 242, 242, 0.2);" : "")">
+                            <td><MudText Typo="Typo.h6" Style="color: white;">@Juego.Equipo1</MudText></td>
+                            <td><MudText Typo="Typo.h6" Style="color: white; font-weight: bold;">@Juego.puntosEquipo1 pts</MudText></td>
+                        </tr>
+                        <tr style="@(Juego.puntosEquipo2 >= Juego.puntosEquipo1 ? "background-color: rgba(121, 242, 242, 0.2);" : "")">
+                            <td><MudText Typo="Typo.h6" Style="color: white;">@Juego.Equipo2</MudText></td>
+                            <td><MudText Typo="Typo.h6" Style="color: white; font-weight: bold;">@Juego.puntosEquipo2 pts</MudText></td>
+                        </tr>
+                    </tbody>
+                </MudSimpleTable>
+            </div>
+
+            <MudPaper Elevation="0" Class="pa-4 mx-auto mb-6 rounded-lg" Style="background-color: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; max-width: 400px;">
+                <MudText Typo="Typo.h5" Style="color: white;">
+                    <strong>GANADOR: </strong> 
+                    <span style="color: #79F2F2; font-weight: bold; font-size: 1.5rem;">
+                        @(Juego.puntosEquipo1 > Juego.puntosEquipo2 ? Juego.Equipo1 : (Juego.puntosEquipo2 > Juego.puntosEquipo1 ? Juego.Equipo2 : "EMPATE"))
+                    </span>
+                </MudText>
+            </MudPaper>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="ResetearParaNuevaPartida" Style="border-radius: 8px; font-weight: bold; padding: 10px 24px;">
+                VOLVER AL INICIO (NUEVA PARTIDA)
+            </MudButton>
+        </MudPaper>
+    }
+    @* === PARTIDA EN CURSO === *@
+    else
+    {
+        <MudPaper Elevation="8" Class="pa-6 rounded-lg mb-8" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #79F2F2;">
+            
+            @* Encabezado Ronda *@
+            <div class="d-flex justify-space-between align-center mb-6">
+                <MudText Typo="Typo.h3" Color="Color.Info" Style="font-weight: bold;">
+                    Ronda @rondaActual de @cantidadRondas
+                </MudText>
                 
-                @*Tabla con la puntuacion de los equipos*@
-                <div style="margin: 20px auto; max-width: 400px;">
-                    <table class="table table-bordered" style="background: white;">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Equipo</th>
-                                <th>Puntaje Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="@(Juego.puntosEquipo1 >= Juego.puntosEquipo2 ? "font-weight: bold; background: #d4edda;" : "")">
-                                <td>@Juego.Equipo1</td>
-                                <td>@Juego.puntosEquipo1 pts</td>
-                            </tr>
-                            <tr style="@(Juego.puntosEquipo2 >= Juego.puntosEquipo1 ? "font-weight: bold; background: #d4edda;" : "")">
-                                <td>@Juego.Equipo2</td>
-                                <td>@Juego.puntosEquipo2 pts</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    @*Se muestra al ganador*@
-                    <div style="margin-top: 15px; padding: 10px; border: 1px solid #28a745;">
-                        <strong>GANADOR: </strong> 
-                        <span class="badge bg-success" style="font-size: 1.2rem;">
-                            @(Juego.puntosEquipo1 > Juego.puntosEquipo2 ? Juego.Equipo1 : (Juego.puntosEquipo2 > Juego.puntosEquipo1 ? Juego.Equipo2 : "EMPATE"))
-                        </span>
-                    </div>
-                </div>
-
-                <hr />
-                @*Historial de los puntos que se asignaron en cada ronda*@
-                <div style="margin-top: 20px;">
-                    <h5>Historial de Puntos por Ronda</h5>
-                    <table class="table table-sm table-striped" style="font-size: 0.9rem;">
-                        <thead>
-                            <tr>
-                                <th>Ronda</th>
-                                <th>Equipo</th>
-                                <th>Puntos</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (!Juego.HistorialPuntos.Any())
-                            {
-                                <tr>
-                                    <td colspan="3" class="text-center text-muted">No hay puntos asignados aún</td>
-                                </tr>
-                            }
-                            else
-                            {
-                                @foreach (var registro in Juego.HistorialPuntos)
-                                {
-                                    <tr>
-                                        <td>@registro.Ronda</td>
-                                        <td>@registro.Equipo</td>
-                                        <td>+@registro.Puntos</td>
-                                    </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
-                </div>
-
-
-                @*Boton para volver al inicio y empezar una nueva partida, llama al metodo ResetearParaNuevaPartida*@
-                <button @onclick="ResetearParaNuevaPartida" class="btn btn-primary btn-lg" style="margin-top: 20px;">
-                    ← VOLVER AL INICIO (NUEVA PARTIDA)
-                </button>
-            </div>
-        }
-        @*Contenido cuando la partida esta en curso*@
-        else
-        {
-            @*Boton para finalizar la partida*@
-            <div style="display: flex; justify-content: space-between;">
-                <h4>Ronda Actual: @rondaActual / @cantidadRondas</h4>
-                <button @onclick="FinalizarPartida" class="btn btn-danger">Finalizar Partida</button>
-            </div>
-            @*Puntos de la ronda y de los equipos*@
-            <div>
-                <h5>Puntos Ronda: @Juego.puntosPartida</h5>
-                <br>
-                <h5>Puntos @Juego.Equipo1: @Juego.puntosEquipo1</h5>
-                <h5>Puntos @Juego.Equipo2: @Juego.puntosEquipo2</h5>
+                <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.StopCircle" OnClick="FinalizarPartida" Style="border-radius: 8px; font-weight: bold;">
+                    Finalizar Partida
+                </MudButton>
             </div>
 
-            <hr />
+            @* Puntos centrales *@
+            <div class="d-flex flex-column align-center mb-8">
+                <MudText Typo="Typo.h5" Style="color: #ffffff; font-weight: 500;" Class="mb-3">Puntos de la Ronda</MudText>
+                <MudPaper Elevation="6" Class="pa-4 d-flex justify-center align-center rounded-lg" Style="background-color: #0820A6; border: 3px solid #D93DAF; min-width: 200px; min-height: 100px;">
+                    <MudText Typo="Typo.h1" Style="color: #ffffff; font-weight: bold;">@Juego.puntosPartida</MudText>
+                </MudPaper>
+            </div>
 
-            @*Boton para generar la pregunta de manera aleatoria*@
+            @* Tabla de Equipos *@
+            <MudSimpleTable Style="background-color: rgba(0,0,0,0.2); border: 1px solid #8124BF;" Class="mb-6 rounded-lg">
+                <thead>
+                    <tr>
+                        <th><MudText Typo="Typo.h6" Color="Color.Info" Style="font-weight: bold;">Equipo</MudText></th>
+                        <th><MudText Typo="Typo.h6" Color="Color.Info" Style="font-weight: bold;">Puntos</MudText></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><MudText Typo="Typo.h6" Style="color: #ffffff;">@Juego.Equipo1</MudText></td>
+                        <td><MudText Typo="Typo.h6" Style="color: #ffffff; font-weight: bold;">@Juego.puntosEquipo1</MudText></td>
+                    </tr>
+                    <tr>
+                        <td><MudText Typo="Typo.h6" Style="color: #ffffff;">@Juego.Equipo2</MudText></td>
+                        <td><MudText Typo="Typo.h6" Style="color: #ffffff; font-weight: bold;">@Juego.puntosEquipo2</MudText></td>
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
+
+            <MudDivider Class="my-6" Style="border-color: #8124BF; border-width: 2px;" />
+
+            @* Botón Generar o Mostrar Pregunta *@
             @if (string.IsNullOrEmpty(Juego.PreguntaActual))
             {
-                <button @onclick="CargarPreguntaAleatoria" class="btn btn-primary btn-lg">Generar Pregunta</button>
+                <div class="d-flex justify-end">
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Large" EndIcon="@Icons.Material.Filled.LiveHelp" OnClick="CargarPreguntaAleatoria" Style="border-radius: 8px; font-weight: bold; padding: 12px 30px;">
+                        Generar Pregunta
+                    </MudButton>
+                </div>
             }
             else
             {
-                @*Seccion cuando se genero la pregunta*@
-                @*Apartado para cambiar el valor de los puntos de la ronda*@
-                <div style="margin-bottom: 15px; padding: 10px; background: @(Juego.PreguntaRevelada ? "#e9ecef" : "#fff3cd"); border-radius: 5px;">
-                    <span style="font-weight: bold;">Multiplicador de esta Ronda:</span>
-                    @*Se presentan los posibles multiplicadores de puntos*@
-                    <div class="btn-group ms-3">
+                @* Multiplicadores con colores jerárquicos *@
+                <div class="d-flex align-center justify-space-between mb-6 mt-4">
+                    <MudText Typo="Typo.h3" Color="Color.Info" Style="font-weight: bold;">
+                        Multiplicación de puntos
+                    </MudText>
+                    
+                    <div class="d-flex align-center gap-3">
                         @foreach (var m in new int[] { 1, 2, 3 })
                         {
-                            <button @onclick="() => Juego.SetMultiplicador(m)" 
-                                    disabled="@Juego.PreguntaRevelada"
-                                    class="btn @(Juego.Multiplicador == m ? "btn-dark" : "btn-outline-dark")">
+                            // Colores según magnitud: Info (Cian), Tertiary (Morado), Secondary (Rosa Neón)
+                            Color colorActivo = m == 1 ? Color.Info : (m == 2 ? Color.Tertiary : Color.Secondary);
+                            bool seleccionado = Juego.Multiplicador == m;
+                            
+                            <MudButton OnClick="() => Juego.SetMultiplicador(m)"
+                                       Disabled="@Juego.PreguntaRevelada"
+                                       Variant="@(seleccionado ? Variant.Filled : Variant.Outlined)"
+                                       Color="@(seleccionado ? colorActivo : Color.Default)"
+                                       Style="@(!seleccionado ? "color: white; border-color: rgba(255,255,255,0.3);" : "font-weight: bold;")"
+                                       Size="Size.Large">
                                 x @m
-                            </button>
+                            </MudButton>
                         }
                     </div>
-                    @*No se puede cambiar el valor del multiplicador si la ronda esta en curso*@
-                    @if (Juego.PreguntaRevelada)
-                    {
-                        <small class="text-muted ms-2">(Ronda en curso)</small>
-                    }
                 </div>
 
-                @*Seccion donde se visualiza la pregunta y presenta la posibilidad de revelarla*@
-                <div style="background: #f0f0f0; padding: 15px; border-radius: 5px;">
-                    <h5><strong>Vista del Admin:</strong> @Juego.PreguntaActual</h5>
-                    
-                    @*Boton para revelar la pregunta*@
+                @* Caja de la Pregunta legible y Botón Revelar centrado *@
+                <MudPaper Elevation="4" Class="pa-8 mb-6 rounded-lg d-flex flex-column align-center" Style="background-color: rgba(0,0,0,0.5); border: 2px solid #8124BF;">
+                    <MudText Typo="Typo.h4" Style="color: #ffffff; text-align: center; font-weight: bold;" Class="mb-8">
+                        @Juego.PreguntaActual
+                    </MudText>
+
                     @if (!Juego.PreguntaRevelada)
                     {
-                        <button @onclick="() => Juego.RevelarPregunta()" class="btn btn-warning w-100">
+                        <MudButton Variant="Variant.Filled" 
+                                   Color="Color.Secondary" 
+                                   Size="Size.Large" 
+                                   StartIcon="@Icons.Material.Filled.Visibility"
+                                   OnClick="() => Juego.RevelarPregunta()"
+                                   Style="border-radius: 8px; font-weight: bold; padding: 15px 40px; font-size: 1.2rem;">
                             REVELAR PREGUNTA AL TABLERO
-                        </button>
+                        </MudButton>
                     }
-                    @*Cuando la pregunta ya esta visible en el tablero*@
                     else
                     {
-                        <span class="badge bg-success">Pregunta visible en tablero</span>
+                        <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Large" Class="px-4">
+                            Pregunta visible en tablero
+                        </MudChip>
                     }
-                </div>
+                </MudPaper>
 
-                @*Seccion cuando se revela la pregunta*@
-                @if (Juego.PreguntaRevelada) {
-                    <h4 style="margin-top:20px;">Respuestas (Presiona para revelar)</h4>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                        @*Respuestas de la pregunta*@
+                @* Respuestas, Errores y Puntos *@
+                @if (Juego.PreguntaRevelada) 
+                {
+                    <MudText Typo="Typo.h5" Style="color: white; font-weight: bold;" Class="mb-4">Respuestas (Presiona para revelar)</MudText>
+                    
+                    <MudGrid Spacing="2" Class="mb-6">
                         @foreach (var respuesta in Juego.RespuestasActuales)
                         {
-                            @*Cuando se presiona el boton se revela la respuesta*@
-                            <button @onclick="() => Juego.RevelarRespuestaPorTexto(respuesta.res_respuesta)"
-                            style="padding: 10px; background: @(Juego.RespuestasReveladas.Contains(respuesta.res_respuesta) ? "#4CAF50" : "#2196F3"); color: white; border: none; border-radius: 5px; text-align: left;">
-                    
-                                @* Respuesta *@
-                                <strong>@respuesta.res_respuesta</strong> 
-                                
-                                <span style="float: right;">
-                                    @* Valor base *@
-                                    (@respuesta.res_cantidad pts)
-                                    
-                                    @* Valor multiplicado (solo si el multiplicador es mayor a 1) *@
-                                    @if (Juego.Multiplicador > 1)
-                                    {
-                                        <span style="margin-left: 10px; color: #ffff00; font-weight: bold;">
-                                            ➔ @Juego.ObtenerPuntosMultiplicados(respuesta.res_cantidad) pts
+                            bool revelada = Juego.RespuestasReveladas.Contains(respuesta.res_respuesta);
+                            <MudItem xs="12" sm="6">
+                                <MudButton FullWidth="true" 
+                                           Variant="Variant.Filled"
+                                           OnClick="() => Juego.RevelarRespuestaPorTexto(respuesta.res_respuesta)"
+                                           Style="@(revelada ? "background-color: #28a745; color: white; justify-content: flex-start; padding: 15px;" : "background-color: #0820A6; color: white; justify-content: flex-start; padding: 15px; border: 1px solid #79F2F2;")">
+                                    <div class="d-flex justify-space-between" style="width: 100%;">
+                                        <span style="font-weight: bold; font-size: 1.1rem;">@respuesta.res_respuesta</span>
+                                        <span>
+                                            (@respuesta.res_cantidad pts)
+                                            @if (Juego.Multiplicador > 1)
+                                            {
+                                                <span style="color: #ffff00; font-weight: bold; margin-left: 8px;">➔ @Juego.ObtenerPuntosMultiplicados(respuesta.res_cantidad) pts</span>
+                                            }
                                         </span>
-                                    }
-                                </span>
-                            </button>
+                                    </div>
+                                </MudButton>
+                            </MudItem>
                         }
-                    </div>
+                    </MudGrid>
 
-                    @*Seccion para marcar los errores de los equipos*@
-                    <div style="display: flex; justify-content: space-around; margin-top: 15px; padding: 10px; background: #ffebee; border-radius: 8px;">
-                        <div style="text-align: center;">
-                            <h6>Errores @Juego.Equipo1</h6>
-                            <div style="font-size: 1.5rem; color: red; font-weight: bold; margin-bottom: 5px;">
-                                @string.Concat(Enumerable.Repeat("X ", Juego.ErroresEquipo1))
-                            </div>
-                            <button class="btn btn-outline-danger btn-sm" @onclick='() => Juego.AgregarError(Juego.Equipo1)'>
-                                + Marcar Error
-                            </button>
-                        </div>
+                    <MudGrid Spacing="4" Class="mb-6">
+                        <MudItem xs="6">
+                            <MudPaper Class="pa-4 text-center" Style="background-color: rgba(217, 61, 175, 0.1); border: 1px solid #D93DAF;">
+                                <MudText Typo="Typo.h6" Style="color: white;">Errores @Juego.Equipo1</MudText>
+                                <MudText Typo="Typo.h4" Color="Color.Error" Style="font-weight: bold;" Class="my-2">
+                                    @(Juego.ErroresEquipo1 > 0 ? string.Concat(Enumerable.Repeat("X ", Juego.ErroresEquipo1)) : "-")
+                                </MudText>
+                                <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" StartIcon="@Icons.Material.Filled.Add" OnClick='() => Juego.AgregarError(Juego.Equipo1)'>
+                                    Marcar Error
+                                </MudButton>
+                            </MudPaper>
+                        </MudItem>
+                        
+                        <MudItem xs="6">
+                            <MudPaper Class="pa-4 text-center" Style="background-color: rgba(217, 61, 175, 0.1); border: 1px solid #D93DAF;">
+                                <MudText Typo="Typo.h6" Style="color: white;">Errores @Juego.Equipo2</MudText>
+                                <MudText Typo="Typo.h4" Color="Color.Error" Style="font-weight: bold;" Class="my-2">
+                                    @(Juego.ErroresEquipo2 > 0 ? string.Concat(Enumerable.Repeat("X ", Juego.ErroresEquipo2)) : "-")
+                                </MudText>
+                                <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" StartIcon="@Icons.Material.Filled.Add" OnClick='() => Juego.AgregarError(Juego.Equipo2)'>
+                                    Marcar Error
+                                </MudButton>
+                            </MudPaper>
+                        </MudItem>
+                    </MudGrid>
 
-                        <div style="text-align: center;">
-                            <h6>Errores @Juego.Equipo2</h6>
-                            <div style="font-size: 1.5rem; color: red; font-weight: bold; margin-bottom: 5px;">
-                                @string.Concat(Enumerable.Repeat("X ", Juego.ErroresEquipo2))
-                            </div>
-                            <button class="btn btn-outline-danger btn-sm" @onclick='() => Juego.AgregarError(Juego.Equipo2)'>
-                                + Marcar Error
-                            </button>
-                        </div>
-                    </div>
-
-                    @*Seccion para asignar los puntos a los equipos*@
-                    <div style="display: flex; justify-content: space-evenly; margin-top: 20px; background: #eee; padding: 15px;">
-                        @* Usamos una variable temporal para el texto del botón si los puntos ya se asignaron, para evitar que se vuelvan a asignar *@
-                        <button class="btn btn-success" 
-                                @onclick="() => Juego.AsignarPuntosEquipo(Juego.Equipo1, rondaActual)"
-                                disabled="@(Juego.puntosAsignadosEnRonda || Juego.puntosPartida == 0)">
+                    <MudPaper Class="pa-4 mb-6 d-flex justify-space-around align-center" Style="background-color: rgba(121, 242, 242, 0.1); border: 1px dashed #79F2F2;">
+                        <MudButton Variant="Variant.Filled" Color="Color.Success" Disabled="@(Juego.puntosAsignadosEnRonda || Juego.puntosPartida == 0)" OnClick="() => Juego.AsignarPuntosEquipo(Juego.Equipo1, rondaActual)">
                             @(Juego.puntosAsignadosEnRonda ? "Entregados" : $"Entregar {Juego.puntosPartida} pts a {Juego.Equipo1}")
-                        </button>
+                        </MudButton>
+                        
+                        @if (Juego.puntosAsignadosEnRonda)
+                        {
+                            <MudText Color="Color.Success" Style="font-weight: bold;"><MudIcon Icon="@Icons.Material.Filled.CheckCircle" Class="mr-2" />Puntos asignados</MudText>
+                        }
 
-                        <button class="btn btn-success" 
-                                @onclick="() => Juego.AsignarPuntosEquipo(Juego.Equipo2, rondaActual)"
-                                disabled="@(Juego.puntosAsignadosEnRonda || Juego.puntosPartida == 0)">
+                        <MudButton Variant="Variant.Filled" Color="Color.Success" Disabled="@(Juego.puntosAsignadosEnRonda || Juego.puntosPartida == 0)" OnClick="() => Juego.AsignarPuntosEquipo(Juego.Equipo2, rondaActual)">
                             @(Juego.puntosAsignadosEnRonda ? "Entregados" : $"Entregar {Juego.puntosPartida} pts a {Juego.Equipo2}")
-                        </button>
-                    </div>
-
-                    @*Confirmacion de que se asignaron los puntos*@
-                    @if (Juego.puntosAsignadosEnRonda)
-                    {
-                        <p style="color: green; text-align: center; margin-top: 5px;">
-                            ✔ Puntos de la ronda asignados correctamente.
-                        </p>
-                    }
+                        </MudButton>
+                    </MudPaper>
                 }
 
-                @*Boton para avanzar de ronda*@
-                <button @onclick="SiguienteRonda" style="margin-top: 20px;" class="btn btn-success">
-                    @(rondaActual < cantidadRondas ? "Siguiente Ronda" : "FINALIZAR Y VER GANADOR")
-                </button>
+                @* BOTÓN SALTAR RONDA (Alineado a la extrema derecha) *@
+                <div class="d-flex justify-end mt-8">
+                    <MudButton Variant="Variant.Filled" 
+                               Color="Color.Primary" 
+                               EndIcon="@Icons.Material.Filled.SkipNext" 
+                               OnClick="SiguienteRonda"
+                               Style="border-radius: 8px; font-weight: bold; padding: 10px 24px;">
+                        @(rondaActual < cantidadRondas ? "Saltar Ronda" : "FINALIZAR Y VER GANADOR")
+                    </MudButton>
+                </div>
             }
-        }
-    </div>
+        </MudPaper>
+    }
 }
 
 @code {
@@ -387,6 +441,6 @@
     //Metodo para abrir el tablero en otra ventana
     private async Task AbrirVentana()
     {
-        await JSRuntime.InvokeVoidAsync("openWindow", "/tablero", "Nueva Ventana", 800, 600);
+        await JSRuntime.InvokeVoidAsync("openWindow", "/tablero", "Nueva Ventana", 1366, 768);
     }
 }

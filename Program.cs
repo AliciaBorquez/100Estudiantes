@@ -1,3 +1,4 @@
+using MudBlazor.Services;
 using CienEstudiantesDijeron.Components;
 using Microsoft.EntityFrameworkCore;
 using CienEstudiantesDijeron.Data;
@@ -25,7 +26,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-
+builder.Services.AddMudServices();
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

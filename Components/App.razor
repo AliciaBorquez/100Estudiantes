@@ -1,6 +1,5 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,18 +8,21 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="CienEstudiantesDijeron.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <HeadOutlet />
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    
+    <HeadOutlet @rendermode="InteractiveServer" />
 </head>
-
 <body>
-    <Routes />
+    <Routes @rendermode="InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+
     <script>
         window.openWindow = (url, title, w, h) => {
-            // Calculamos la posición para centrarla
             const left = (screen.width / 2) - (w / 2);
             const top = (screen.height / 2) - (h / 2);
-            
             return window.open(url, title, 
                 `toolbar=no, location=no, directories=no, status=no, menubar=no, 
                 scrollbars=yes, resizable=yes, copyhistory=no, 
@@ -28,5 +30,4 @@
         }
     </script>
 </body>
-
 </html>

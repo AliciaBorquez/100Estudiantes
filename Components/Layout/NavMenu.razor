@@ -1,43 +1,57 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">CienEstudiantesDijeron</a>
-    </div>
-</div>
+﻿<MudAppBar Elevation="4" Fixed="true">
+    
+    @* LOGO (Mantiene su altura y proporción) *@
+    <a href="/" class="d-flex align-center">
+        <MudImage Src="images/titulo.png" 
+                  Alt="100 Estudiantes Dijeron" 
+                  Height="45" 
+                  ObjectFit="ObjectFit.Contain" 
+                  Class="mr-4" />
+    </a>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+    <MudSpacer />
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Control
-            </NavLink>
-        </div>
+    @* BOTONES DIRECTOS *@
+    <MudButton Href="/" 
+               Variant="Variant.Text" 
+               Color="Color.Info" 
+               StartIcon="@Icons.Material.Filled.Dashboard" 
+               Class="mx-1">
+        Control
+    </MudButton>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="tablero">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Tablero
-            </NavLink>
-        </div>
+    <MudButton Href="/tablero" 
+               Variant="Variant.Text" 
+               Color="Color.Info" 
+               StartIcon="@Icons.Material.Filled.Tv" 
+               Class="mx-1">
+        Tablero
+    </MudButton>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="preguntas">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Preguntas
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="importar">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Importar
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="gestionar">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Gestion Preguntas
-            </NavLink>
-        </div>
-
-    </nav>
-</div>
-
+    @* MENÚ DESPLEGABLE *@
+    <MudMenu Label="Preguntas" 
+             Color="Color.Info" 
+             Variant="Variant.Text" 
+             StartIcon="@Icons.Material.Filled.Quiz" 
+             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" 
+             AnchorOrigin="Origin.BottomRight" 
+             TransformOrigin="Origin.TopRight" 
+             Class="mx-1">
+             
+        <MudMenuItem Href="/preguntas" Icon="@Icons.Material.Filled.List">
+            Ver Preguntas
+        </MudMenuItem>
+        
+        <MudMenuItem Href="/gestionar" Icon="@Icons.Material.Filled.Edit">
+            Gestionar
+        </MudMenuItem>
+        
+        <MudDivider />
+        
+        <MudMenuItem Href="/importar" Icon="@Icons.Material.Filled.UploadFile">
+            Importar
+        </MudMenuItem>
+        
+    </MudMenu>
+    
+</MudAppBar>

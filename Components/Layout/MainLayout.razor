@@ -1,20 +1,32 @@
 ﻿@inherits LayoutComponentBase
 
-@*Layout principal*@
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<MudThemeProvider Theme="_neonTheme" IsDarkMode="true" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudPopoverProvider />
 
-    <main>
-        <article class="content px-4">
+<MudLayout>
+    <NavMenu />
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="pt-4 pb-8">
             @Body
-        </article>
-    </main>
-</div>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+@code {
+    MudTheme _neonTheme = new MudTheme()
+    {
+        PaletteDark = new PaletteDark()
+        {
+            Primary = "#5F49F2",
+            Secondary = "#D93DAF",
+            Tertiary = "#8124BF",
+            Info = "#79F2F2",
+            Background = "12151D",
+            AppbarBackground = "#1E1F72",
+            TextPrimary = "#FFFFFF",
+            DrawerBackground = "#051026"
+        }
+    };
+}

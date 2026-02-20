@@ -1,130 +1,252 @@
 @page "/tablero"
-
-@*Layout sin Navbar*@
 @layout Layout.LayoutSinNav
 @inject JuegoService Juego
 @implements IDisposable
 @rendermode InteractiveServer
 
-<PageTitle>Tablero</PageTitle>
+<PageTitle>Tablero del Juego</PageTitle>
 
-@*Seccion de visualizacion de los equipo y sus puntos*@
-<div class="marcador-container" style="display: flex; justify-content: space-around; background: #222; color: white; padding: 20px;">
-    <div class="equipo">
-        <h2 style="color: cyan;">@Juego.Equipo1</h2>
-        <h5>Puntos: @Juego.puntosEquipo1</h5>
-        <div style="color: red; font-size: 1.2rem;">@string.Concat(Enumerable.Repeat("X ", Juego.ErroresEquipo1))</div>
-    </div>
-    @*Apartado para visualizar los puntos de la ronda*@
-    <div class="vs">
-        <h1>VS</h1>
-        @if (Juego.puntosPartida > 0)
-        {
-            <h4 style="text-align: center; font-size: 2.5rem; color: gold; transition: all 0.5s ease;">
-                @Juego.puntosPartida
-            </h4>
-        }
-        @*Si ya se asignaron no se pueden visualizar*@
-        else if (Juego.puntosAsignadosEnRonda)
-        {
-        }
-        @*Si la ronda vale x2 o mas se anuncia a los jugadores*@
-        @if (Juego.Multiplicador > 1 && !Juego.puntosAsignadosEnRonda)
-        {
-            <div style="background: red; color: white; padding: 5px; border-radius: 5px; animation: pulse 1s infinite;">
-                ¡RONDA @Juego.Multiplicador X!
+<div class="tablero-container">
+    
+    @* === LAYOUT PRINCIPAL (Izquierda, Centro, Derecha) === *@
+    <div class="layout-principal">
+        
+        @* === LATERAL IZQUIERDO (EQUIPO 1) === *@
+        <div class="panel-lateral">
+            <div class="caja-nombre borde-rosa">
+                @Juego.Equipo1
             </div>
-        }
-    </div>
-    <div class="equipo">
-        <h2 style="color: magenta;">@Juego.Equipo2</h2>
-        <h5>Puntos: @Juego.puntosEquipo2</h5>
-        <div style="color: red; font-size: 1.2rem;">@string.Concat(Enumerable.Repeat("X ", Juego.ErroresEquipo2))</div>
-    </div>
-</div>
+            <div class="caja-puntos borde-rosa">
+                @Juego.puntosEquipo1
+            </div>
+            <div class="caja-errores">
+                @(Juego.ErroresEquipo1 > 0 ? string.Concat(Enumerable.Repeat("X ", Juego.ErroresEquipo1)) : "Sin errores")
+            </div>
+        </div>
 
-@*Seccion de visualizacion de las preguntas con sus respuestas*@
-<div style="background-color: navy; color: white; min-height: 400px; padding: 50px; text-align: center;">
-    @*Cuando la pregunta fue revelada*@
-    @if (Juego.PreguntaRevelada)
-    {
-        @*Pregunta*@
-        <h1 style="font-size: 3rem; margin-bottom: 30px; text-transform: uppercase;">@Juego.PreguntaActual</h1>
+        @* === ZONA CENTRAL === *@
+        <div class="panel-central">
+            @* Círculo gigante oscurecido y agrandado *@
+            <div class="circulo-decorativo"></div>
 
-        @*Respuestas*@
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 900px; margin: 0 auto;">
-            @for (int i = 0; i < Juego.RespuestasActuales.Count; i++)
-            {
-                var res = Juego.RespuestasActuales[i];
-                var estaRevelada = Juego.RespuestasReveladas.Contains(res.res_respuesta);
+            <div class="contenido-central">
+                @if (Juego.PreguntaRevelada || Juego.puntosPartida > 0 || !string.IsNullOrEmpty(Juego.PreguntaActual))
+                {
+                    string colorMult = Juego.Multiplicador == 3 ? "#D93DAF" : (Juego.Multiplicador == 2 ? "#8124BF" : "#FFCB00");
+                    string sombraMult = Juego.Multiplicador == 3 ? "0 0 30px #D93DAF, inset 0 0 15px #D93DAF" : (Juego.Multiplicador == 2 ? "0 0 20px #8124BF, inset 0 0 10px #8124BF" : "0 0 10px rgba(121, 242, 242, 0.5)");
+                    string animacionMult = Juego.Multiplicador == 3 ? "latido-fuerte 0.8s infinite" : (Juego.Multiplicador == 2 ? "pulse 1.5s infinite" : "none");
 
-                <div style="height: 60px; border: 2px solid white; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: @(estaRevelada ? "gold" : "#333"); color: @(estaRevelada ? "black" : "white"); font-size: 1.5rem; font-weight: bold;">
-                    <span>@(i + 1). @(estaRevelada ? res.res_respuesta : "???")</span>
-                    @if (estaRevelada)
+                    @* Cuadro superior de la ronda (Más grande y más arriba) *@
+                    <div class="caja-ronda" style="border-color: @colorMult; box-shadow: @sombraMult; color: @colorMult; animation: @animacionMult;">
+                        @Juego.puntosPartida
+                    </div>
+
+                    @if (Juego.PreguntaRevelada)
                     {
-                        @* Mostramos el valor multiplicado directamente si la ronda vale mas*@
-                        <span style="border-left: 2px solid black; padding-left: 15px;">
-                            @Juego.ObtenerPuntosMultiplicados(res.res_cantidad)
-                        </span>
+                        <h1 class="texto-pregunta">@Juego.PreguntaActual</h1>
+
+                        @* Contenedor sólido/casi sólido detrás de las respuestas *@
+                        <div class="contenedor-respuestas-fondo">
+                            <div class="respuestas-grid">
+                                @for (int i = 0; i < Juego.RespuestasActuales.Count; i++)
+                                {
+                                    var res = Juego.RespuestasActuales[i];
+                                    var estaRevelada = Juego.RespuestasReveladas.Contains(res.res_respuesta);
+
+                                    <div class="caja-respuesta @(estaRevelada ? "revelada" : "oculta")">
+                                        <span class="respuesta-texto">@(i + 1). @(estaRevelada ? res.res_respuesta : "_________________")</span>
+                                        
+                                        @if (estaRevelada)
+                                        {
+                                            <span class="respuesta-puntos">@Juego.ObtenerPuntosMultiplicados(res.res_cantidad)</span>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     }
-                </div>
-            }
+                }
+                else
+                {
+                    <div class="zona-esperando">
+                        <img src="images/logo.png" alt="Logo" class="logo-animado" />
+                        <h2 class="texto-esperando">ESPERANDO RONDA...</h2>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @* === LATERAL DERECHO (EQUIPO 2) === *@
+        <div class="panel-lateral">
+            <div class="caja-nombre borde-lila">
+                @Juego.Equipo2
+            </div>
+            <div class="caja-puntos borde-lila">
+                @Juego.puntosEquipo2
+            </div>
+            <div class="caja-errores">
+                @(Juego.ErroresEquipo2 > 0 ? string.Concat(Enumerable.Repeat("X ", Juego.ErroresEquipo2)) : "Sin errores")
+            </div>
+        </div>
+
+    </div>
+
+    @* === MARCA DE ERROR === *@
+    @if (Juego.MostrarX)
+    {
+        <div class="pantalla-error">
+            <h1 class="x-gigante">X</h1>
         </div>
     }
-    @*Cuando no hay pregunta para la ronda*@
-    else
+
+    @* === FIN DE PARTIDA RESPONSIVO === *@
+    @if (Juego.PartidaTerminada)
     {
-        <h1 style="color: rgba(255,255,255,0.3); margin-top: 100px;">ESPERANDO RONDA...</h1>
+        <div class="pantalla-fin">
+            <h1 class="titulo-fin">¡FIN DE LA PARTIDA!</h1>
+            <div class="resumen-fin">
+                <div class="caja-fin borde-cian">
+                    <h2>@Juego.Equipo1</h2>
+                    <p>@Juego.puntosEquipo1</p>
+                </div>
+                <h1 class="vs-fin">VS</h1>
+                <div class="caja-fin borde-rosa">
+                    <h2>@Juego.Equipo2</h2>
+                    <p>@Juego.puntosEquipo2</p>
+                </div>
+            </div>
+            <h1 class="ganador-fin">
+                GANADOR: @(Juego.puntosEquipo1 > Juego.puntosEquipo2 ? Juego.Equipo1 : (Juego.puntosEquipo2 > Juego.puntosEquipo1 ? Juego.Equipo2 : "¡EMPATE!"))
+            </h1>
+        </div>
     }
 </div>
 
-@*Apartado donde se muestra la X cuando se comete un error*@
-@if (Juego.MostrarX)
-{
-    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5);">
-        <h1 style="font-size: 20rem; color: red; text-shadow: 0 0 20px black; animation: shake 0.5s;">X</h1>
-    </div>
-}
-
-@*Pantalla de Resumen de Partida*@
-@if (Juego.PartidaTerminada)
-{
-    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,50,0.95); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white;">
-        <h1 style="font-size: 5rem; color: gold; text-shadow: 2px 2px 10px white;">¡FIN DE LA PARTIDA!</h1>
-        @*Resumen de los puntos de los equipos*@
-        <div style="display: flex; gap: 50px; margin: 40px 0;">
-            <div style="text-align: center; border: 3px solid cyan; padding: 20px; border-radius: 15px;">
-                <h2 style="font-size: 3rem;">@Juego.Equipo1</h2>
-                <p style="font-size: 4rem;">@Juego.puntosEquipo1</p>
-            </div>
-            <h1 style="font-size: 5rem; align-self: center;">VS</h1>
-            <div style="text-align: center; border: 3px solid magenta; padding: 20px; border-radius: 15px;">
-                <h2 style="font-size: 3rem;">@Juego.Equipo2</h2>
-                <p style="font-size: 4rem;">@Juego.puntosEquipo2</p>
-            </div>
-        </div>
-        @*Anuncia ganador de la partida*@
-        <h1 style="font-size: 4rem; background: gold; color: black; padding: 10px 40px; border-radius: 50px; animation: pulse 1s infinite;">
-            GANADOR: @(Juego.puntosEquipo1 > Juego.puntosEquipo2 ? Juego.Equipo1 : (Juego.puntosEquipo2 > Juego.puntosEquipo1 ? Juego.Equipo2 : "¡EMPATE!"))
-        </h1>
-    </div>
-}
-
-@*Estilos del anuncio de ronda multiplicada y error*@
 <style>
-    @@keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
+    body, html {
+        margin: 0 !important; padding: 0 !important; overflow: hidden !important; background-color: #051026 !important; font-family: 'Roboto', sans-serif;
     }
 
-    @@keyframes shake {
-        0% { transform: translate(1px, 1px) rotate(0deg); }
-        10% { transform: translate(-1px, -2px) rotate(-1deg); }
-        30% { transform: translate(3px, 2px) rotate(0deg); }
-        50% { transform: translate(-1px, 2px) rotate(-1deg); }
-        100% { transform: translate(1px, -2px) rotate(-1deg); }
+    .tablero-container {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; color: white; z-index: 1;
     }
+
+    .tablero-container::before {
+        content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; z-index: -1;
+        background-image: linear-gradient(90deg, rgba(121, 242, 242, 0.2) 2px, transparent 2px), linear-gradient(rgba(121, 242, 242, 0.2) 2px, transparent 2px);
+        background-size: 60px 60px; transform: rotate(-30deg); animation: scroll-diagonal 3s linear infinite;
+    }
+
+    .layout-principal {
+        display: flex; justify-content: space-between; align-items: stretch; width: 100%; height: 100%; padding: 40px; box-sizing: border-box;
+    }
+
+    .panel-lateral {
+        width: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; z-index: 10;
+    }
+
+    /* Textos en mayúscula y diseño lateral */
+    .caja-nombre {
+        background: rgba(0, 0, 0, 0.75); width: 90%; padding: 10px 20px; text-align: center;
+        border-radius: 10px; font-size: 1.5rem; font-weight: bold; text-transform: uppercase;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5); margin-bottom: -5px; z-index: 2;
+    }
+
+    .caja-puntos {
+        background: rgba(0, 0, 0, 0.6); width: 100%; height: 180px; display: flex; align-items: center; justify-content: center;
+        border-radius: 20px; font-size: 5rem; font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 1;
+    }
+
+    .caja-errores {
+        background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,0,0,0.4); color: red;
+        padding: 5px 15px; border-radius: 8px; font-size: 1.2rem; font-weight: bold;
+        text-shadow: 0 0 5px red; margin-top: 5px; opacity: 0.8;
+    }
+
+    .borde-cian { border: 2px solid #79F2F2; color: #79F2F2; text-shadow: 0 0 10px #79F2F2; box-shadow: inset 0 0 10px rgba(121, 242, 242, 0.2); }
+    .borde-rosa { border: 2px solid #D93DAF; color: #D93DAF; text-shadow: 0 0 10px #D93DAF; box-shadow: inset 0 0 10px rgba(217, 61, 175, 0.2); }
+    .borde-amarillo { border: 2px solid #FFCB00; color: #FFCB00; text-shadow: 0 0 10px #FFCB00; box-shadow: inset 0 0 10px rgba(255,255,0,0.5); }
+    .borde-lila{ border: 2px solid #5F49F2; color: #5F49F2; text-shadow: 0 0 10px #5F49F2; box-shadow: inset 0 0 10px rgba(72, 62, 140, 0.2); }
+
+    .panel-central {
+        flex-grow: 1; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 40px;
+    }
+
+    /* CÍRCULO GIGANTE Y MÁS OSCURO */
+    .circulo-decorativo {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 85vh; height: 85vh; border-radius: 50%; background: rgba(2, 5, 12, 0.55);
+        border: 2px solid rgba(129, 36, 191, 0.2); box-shadow: 0 0 60px rgba(0,0,0,0.9), inset 0 0 50px rgba(0,0,0,0.8);
+        z-index: 0;
+    }
+
+    .contenido-central {
+        z-index: 10; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+
+    /* CAJA DE RONDA (Más arriba y más grande) */
+    .caja-ronda {
+        background: rgba(0, 0, 0, 0.8); border: 3px solid; padding: 15px 50px; border-radius: 15px;
+        font-size: 6.5rem; font-weight: bold; text-align: center; margin-bottom: 30px; margin-top: -45px;
+        min-width: 180px; background-color: rgba(0,0,0,0.9);
+    }
+
+    .texto-pregunta {
+        font-size: 2.8rem; text-align: center; text-transform: uppercase; margin-bottom: 30px;
+        text-shadow: 2px 2px 5px black, 0 0 10px rgba(255,255,255,0.5); max-width: 90%;
+    }
+
+    /* CONTENEDOR SÓLIDO PARA RESPUESTAS */
+    .contenedor-respuestas-fondo {
+        background: rgba(5, 10, 20, 0.85); padding: 30px 40px; border-radius: 20px;
+        border: 1px solid rgba(255, 255, 0, 0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        width: 100%; max-width: 950px;
+    }
+
+    .respuestas-grid {
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%;
+    }
+
+    /* CAJA RESPUESTA: AMARILLO NEÓN POR DEFECTO */
+    .caja-respuesta {
+        height: 65px; border: 2px solid #FFCB00; display: flex; align-items: center; justify-content: space-between;
+        padding: 0 20px; font-size: 1.5rem; font-weight: bold; border-radius: 8px; text-shadow: 1px 1px 3px black;
+    }
+
+    .caja-respuesta.oculta { 
+        background: rgba(0, 0, 0, 0.85); color: #FFCB00; 
+        text-shadow: 0 0 8px rgba(255,255,0,0.5); box-shadow: inset 0 0 10px rgba(255,255,0,0.1);
+    }
+    
+    .caja-respuesta.revelada {
+        background: linear-gradient(90deg, #D93DAF, #8124BF); color: white;
+        box-shadow: 0 0 15px #D93DAF; border: 2px solid #D93DAF;
+    }
+
+    .respuesta-puntos { border-left: 2px solid rgba(255,255,255,0.5); padding-left: 15px; }
+
+    .zona-esperando { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .logo-animado { height: 250px; object-fit: contain; animation: pulse 2s infinite; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(121, 242, 242, 0.6)); }
+    .texto-esperando { color: rgba(121, 242, 242, 0.4); font-size: 1.5rem; letter-spacing: 5px; animation: float-sutil 4s infinite ease-in-out; }
+
+    .pantalla-error { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); }
+    .x-gigante { font-size: 35rem; color: #ff0000; text-shadow: 0 0 50px #ff0000, 0 0 100px #ff0000; animation: shake 0.5s; margin: 0; line-height: 1; }
+    
+    /* PANTALLA FIN RESPONSIVA Y MAYÚSCULAS */
+    .pantalla-fin { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 16, 38, 0.95); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+    .titulo-fin { font-size: clamp(3rem, 6vw, 6rem); color: #ffff00; text-shadow: 0 0 20px #ffff00; margin-bottom: 20px; }
+    .resumen-fin { display: flex; gap: clamp(20px, 4vw, 80px); margin: 40px 0; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .caja-fin { text-align: center; padding: clamp(20px, 3vw, 40px); border-radius: 20px; background: rgba(0,0,0,0.5); min-width: 250px; }
+    .caja-fin h2 { font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 10px; text-transform: uppercase; }
+    .caja-fin p { font-size: clamp(3.5rem, 6vw, 6rem); font-weight: bold; margin: 0; color: white;}
+    .vs-fin { font-size: clamp(3rem, 5vw, 5rem); text-shadow: 0 0 15px white; }
+    .ganador-fin { text-transform: uppercase; font-size: clamp(2rem, 4vw, 4rem); background: #ffff00; color: black; padding: 15px clamp(20px, 4vw, 50px); border-radius: 50px; animation: pulse 1s infinite; box-shadow: 0 0 30px #ffff00; margin-top: 20px;}
+
+    @@keyframes scroll-diagonal { 0% { background-position: 0 0; } 100% { background-position: 60px 60px; } }
+    @@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    @@keyframes latido-fuerte { 0% { transform: scale(1); } 20% { transform: scale(1.15); } 40% { transform: scale(1); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+    @@keyframes float-sutil { 0% { transform: translateY(0px); opacity: 0.5; } 50% { transform: translateY(-10px); opacity: 0.8; } 100% { transform: translateY(0px); opacity: 0.5; } }
+    @@keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-10px, -10px) rotate(-3deg); } 30% { transform: translate(10px, 10px) rotate(3deg); } 50% { transform: translate(-10px, 10px) rotate(-3deg); } 100% { transform: translate(1px, -1px) rotate(0deg); } }
 </style>
 
 @code {
@@ -133,18 +255,9 @@
         Juego.OnChange += ManejarCambioEstado;
     }
 
-    // Creamos un método dedicado para invocar el cambio
     private async void ManejarCambioEstado()
     {
-        try
-        {
-            // InvokeAsync asegura que volvamos al hilo del navegador correspondiente
-            await InvokeAsync(StateHasChanged);
-        }
-        catch (Exception)
-        {
-            // Manejo silencioso en caso de que el circuito se haya cerrado
-        }
+        try { await InvokeAsync(StateHasChanged); } catch (Exception) { }
     }
 
     public void Dispose()

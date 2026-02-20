@@ -7,81 +7,139 @@
 
 <PageTitle>Gestion Preguntas</PageTitle>
 
-@*Mencion de que las preguntas se agregan en otra seccion*@
-<h3>Gestión de Contenido</h3>
-<p class="text-muted">Para agregar contenido nuevo, utiliza la sección de <a href="/importar">Importación CSV</a>.</p>
+@* === ENCABEZADO === *@
+<div class="d-flex flex-column mb-6">
+    <MudText Typo="Typo.h2" Color="Color.Primary" Style="font-weight: bold; text-transform: uppercase;">
+        Gestión de Contenido
+    </MudText>
+    <MudText Typo="Typo.subtitle1" Style="color: #79F2F2;">
+        Para agregar contenido nuevo, utiliza la sección de 
+        <MudLink Href="/importar" Color="Color.Secondary" Style="font-weight: bold; text-decoration: underline;">Importación CSV</MudLink>.
+    </MudText>
+</div>
 
-@*Si no hay preguntas no se muestra nada*@
+@* === INDICADOR DE CARGA === *@
 @if (preguntas == null)
 {
-    <div class="spinner-border" role="status"></div>
+    <div class="d-flex justify-center my-8">
+        <MudProgressCircular Color="Color.Tertiary" Indeterminate="true" Size="Size.Large" />
+    </div>
 }
-@*Se muestran todas las preguntas*@
 else
 {
-    @foreach (var p in preguntas)
-    {
-        <div class="card mb-3">
-            <div class="card-header bg-dark text-white d-flex justify-content-between shadow-sm" 
-                 style="cursor:pointer" @onclick="() => Alternar(p.pr_id)">
-                <span>@p.pr_pregunta</span>
-                <span>@(preguntaAbiertaId == p.pr_id ? "➖" : "➕")</span>
-            </div>
+    @* === CONTENEDOR PRINCIPAL CON BUSCADOR === *@
+    <MudPaper Elevation="8" Class="pa-6 rounded-lg mb-8" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #8124BF;">
+        
+        @* Barra de búsqueda *@
+        <MudTextField @bind-Value="textoBusqueda" 
+                      Label="Buscar pregunta..." 
+                      Variant="Variant.Outlined" 
+                      Adornment="Adornment.Start" 
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Clearable="true"
+                      Immediate="true"
+                      Class="mb-6" />
 
-            @if (preguntaAbiertaId == p.pr_id)
-            {
-                <div class="card-body border-start border-4 border-primary">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control fw-bold" @bind="p.pr_pregunta" />
-                        <button class="btn btn-primary" @onclick="() => GuardarP(p)">Actualizar</button>
-                        <button class="btn btn-danger" @onclick="() => BorrarP(p)" @onclick:stopPropagation="true">
-                            Eliminar Todo
-                        </button>
-                    </div>
-
-                    <h5>Respuestas</h5>
-                    <table class="table table-hover table-sm">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Respuesta</th>
-                                <th style="width:100px">Puntos</th>
-                                <th style="width:50px"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (respDict.ContainsKey(p.pr_id))
-                            {
-                                @foreach (var r in respDict[p.pr_id])
-                                {
-                                    <tr>
-                                        <td><input type="text" class="form-control" @bind="r.res_respuesta" /></td>
-                                        <td><input type="number" class="form-control" @bind="r.res_cantidad" /></td>
-                                        <td>
-                                            <button class="btn btn-outline-success" @onclick="() => GuardarR(r)">💾</button>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
+        @* Lista de preguntas filtradas *@
+        @foreach (var p in PreguntasFiltradas)
+        {
+            <MudPaper Elevation="4" Class="mb-4 rounded-lg overflow-hidden" Style="background-color: rgba(0,0,0,0.4); border: 1px solid #79F2F2;">
+                
+                @* === CABECERA DE LA PREGUNTA (Clickeable) === *@
+                <div class="d-flex justify-space-between align-center pa-4" 
+                     style="cursor:pointer; background: @(preguntaAbiertaId == p.pr_id ? "rgba(121, 242, 242, 0.15)" : "rgba(0,0,0,0.2)"); transition: background 0.3s ease;" 
+                     @onclick="() => Alternar(p.pr_id)">
+                    
+                    <MudText Typo="Typo.h6" Style="color: white; font-weight: bold;">@p.pr_pregunta</MudText>
+                    <MudIcon Icon="@(preguntaAbiertaId == p.pr_id ? Icons.Material.Filled.RemoveCircleOutline : Icons.Material.Filled.AddCircleOutline)" Color="Color.Info" />
                 </div>
-            }
-        </div>
-    }
+
+                @* === CUERPO COLAPSABLE DE LA PREGUNTA === *@
+                <MudCollapse Expanded="@(preguntaAbiertaId == p.pr_id)">
+                    <div class="pa-6" style="border-top: 1px solid #79F2F2;">
+                        
+                        @* Edición de la pregunta y botones de acción *@
+                        <div class="d-flex gap-4 mb-6 align-center flex-wrap">
+                            <div style="flex-grow: 1;">
+                                <MudTextField @bind-Value="p.pr_pregunta" Variant="Variant.Outlined" Label="Modificar texto de la pregunta" FullWidth="true" />
+                            </div>
+                            <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.Save" OnClick="() => GuardarP(p)" Style="height: 56px; font-weight: bold;">
+                                Actualizar
+                            </MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever" OnClick="() => BorrarP(p)" Style="height: 56px; font-weight: bold;">
+                                Eliminar Todo
+                            </MudButton>
+                        </div>
+
+                        @* Edición de las respuestas (Neón Rosa) *@
+                        <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mb-3" Style="font-weight: bold; text-transform: uppercase;">
+                            Respuestas Asociadas
+                        </MudText>
+                        
+                        <MudSimpleTable Style="background-color: rgba(0,0,0,0.3); border: 1px solid #D93DAF;" Class="rounded-lg">
+                            <thead>
+                                <tr>
+                                    <th><MudText Color="Color.Secondary" Style="font-weight: bold;">Respuesta</MudText></th>
+                                    <th style="width: 150px;"><MudText Color="Color.Secondary" Style="font-weight: bold;">Puntos</MudText></th>
+                                    <th style="width: 80px; text-align: center;"><MudText Color="Color.Secondary" Style="font-weight: bold;">Guardar</MudText></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (respDict.ContainsKey(p.pr_id))
+                                {
+                                    @foreach (var r in respDict[p.pr_id])
+                                    {
+                                        <tr>
+                                            <td>
+                                                <MudTextField @bind-Value="r.res_respuesta" Variant="Variant.Text" Style="color: white;" />
+                                            </td>
+                                            <td>
+                                                <MudNumericField @bind-Value="r.res_cantidad" Variant="Variant.Text" Style="color: #FFFF00; font-weight: bold;" />
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <MudIconButton Icon="@Icons.Material.Filled.Save" Color="Color.Success" OnClick="() => GuardarR(r)" Title="Guardar respuesta" />
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </MudSimpleTable>
+                        
+                    </div>
+                </MudCollapse>
+            </MudPaper>
+        }
+        
+        @if (!PreguntasFiltradas.Any())
+        {
+            <MudText Typo="Typo.h6" Style="color: rgba(255,255,255,0.5); text-align: center;" Class="my-4">
+                No se encontraron preguntas que coincidan con la búsqueda.
+            </MudText>
+        }
+
+    </MudPaper>
 }
 
 @code {
-    //Lista con las preguntas
     private List<Pregunta>? preguntas;
-    //Diccionario para relacionar las preguntas con sus respuestas
     private Dictionary<int, List<Respuesta>> respDict = new();
     private int? preguntaAbiertaId;
+
+    // --- NUEVA LÓGICA DE BÚSQUEDA ---
+    private string textoBusqueda = "";
+
+    // Propiedad calculada que filtra la lista automáticamente cuando escribes en la barra
+    private IEnumerable<Pregunta> PreguntasFiltradas =>
+        string.IsNullOrWhiteSpace(textoBusqueda) || preguntas == null
+            ? preguntas ?? Enumerable.Empty<Pregunta>()
+            : preguntas.Where(p => p.pr_pregunta.Contains(textoBusqueda, StringComparison.OrdinalIgnoreCase));
+    // --------------------------------
 
     protected override async Task OnInitializedAsync() => await CargarDatos();
 
     private void Alternar(int id) => preguntaAbiertaId = (preguntaAbiertaId == id) ? null : id;
 
-    //Metodo para cargar datos
     private async Task CargarDatos()
     {
         preguntas = await Context.Preguntas.AsNoTracking().ToListAsync();
@@ -94,13 +152,11 @@ else
         StateHasChanged();
     }
 
-    //Metodo para borrar pregunta
     private async Task BorrarP(Pregunta p)
     {
         try 
         {
             var id = p.pr_id;
-            // Primero se borran las respuestas y luego la pregunta
             await Context.Database.ExecuteSqlRawAsync("DELETE FROM Respuestas WHERE pr_id = {0}", id);
             await Context.Database.ExecuteSqlRawAsync("DELETE FROM Preguntas WHERE pr_id = {0}", id);
 
@@ -114,7 +170,6 @@ else
         }
     }
 
-    //Metodo para guardar pregunta
     private async Task GuardarP(Pregunta p) 
     { 
         Context.Preguntas.Update(p); 
@@ -123,7 +178,6 @@ else
         await CargarDatos(); 
     }
 
-    //Metodo para guardar respuesta
     private async Task GuardarR(Respuesta r) 
     { 
         Context.Respuestas.Update(r); 
