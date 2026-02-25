@@ -244,8 +244,34 @@
                 @* Respuestas, Errores y Puntos *@
                 @if (Juego.PreguntaRevelada) 
                 {
-                    <MudText Typo="Typo.h5" Style="color: white; font-weight: bold;" Class="mb-4">Respuestas (Presiona para revelar)</MudText>
-                    
+                    @* CONTENEDOR FLEX PARA TÍTULO Y BOTÓN TIMER *@
+                    <div class="d-flex justify-space-between align-center mb-4">
+                        <MudText Typo="Typo.h5" Style="color: white; font-weight: bold;">
+                            Respuestas (Presiona para revelar)
+                        </MudText>
+
+                        <div class="d-flex align-center gap-2">
+                            @if (Juego.TimerActivo)
+                            {
+                                <MudChip T="string" Color="Color.Error" Variant="Variant.Filled" OnClose="@(() => Juego.CancelarTimer())">
+                                    TIMER: @Juego.TiempoRestante s (@Juego.EquipoConTimer)
+                                </MudChip>
+                            }
+                            else
+                            {
+                                <MudMenu Label="Timer 10s" 
+                                        Color="Color.Warning" 
+                                        Variant="Variant.Filled" 
+                                        StartIcon="@Icons.Material.Filled.Timer"
+                                        EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                                        Disabled="@(Juego.puntosAsignadosEnRonda || !Juego.PreguntaRevelada)">
+                                    <MudMenuItem OnClick="@(() => Juego.IniciarTimer(Juego.Equipo1))">Para @Juego.Equipo1</MudMenuItem>
+                                    <MudMenuItem OnClick="@(() => Juego.IniciarTimer(Juego.Equipo2))">Para @Juego.Equipo2</MudMenuItem>
+                                </MudMenu>
+                            }
+                        </div>
+                    </div>
+
                     <MudGrid Spacing="2" Class="mb-6">
                         @foreach (var respuesta in Juego.RespuestasActuales)
                         {

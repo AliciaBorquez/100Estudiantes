@@ -1,4 +1,5 @@
 using CienEstudiantesDijeron.Models;
+using System.Timers;
 
 namespace CienEstudiantesDijeron
 {
@@ -43,6 +44,12 @@ public class JuegoService
     public int ErroresEquipo2 { get; private set; } = 0;
     //Verificador para el efecto de la X
     public bool MostrarX { get; private set; } = false; 
+
+    //Timer
+    public int TiempoRestante { get; private set; } = 10;
+    public bool TimerActivo { get; private set; } = false;
+    public string? EquipoConTimer { get; private set; }
+    private System.Timers.Timer? _timer;
     
     //Metodo para actualizar el juego
     public void ActualizarJuego(string pregunta, int preguntaId, List<Respuesta> respuestas)
@@ -71,6 +78,8 @@ public class JuegoService
     {
         if (!RespuestasReveladas.Contains(respuesta))
         {
+            if (TimerActivo) CancelarTimer();
+
             RespuestasReveladas.Add(respuesta);
             AumentarPuntosRonda(respuesta);
             NotifyStateChanged();
@@ -103,6 +112,8 @@ public class JuegoService
     //Metodo para limpiar pregunta
     public void LimpiarPregunta()
     {
+        CancelarTimer();
+
         PreguntaActual = "";
         PreguntaActualId = 0;
         PreguntaRevelada = false;
@@ -176,6 +187,8 @@ public class JuegoService
     //Metodo para finalizar la partida
     public void FinalizarPartida()
     {
+        CancelarTimer();
+        
         PartidaTerminada = true;
         NotifyStateChanged();
     }
@@ -196,6 +209,50 @@ public class JuegoService
         NotifyStateChanged();
         await Task.Delay(2000); 
         MostrarX = false;
+        NotifyStateChanged();
+    }
+
+    public void IniciarTimer(string equipo)
+    {
+        CancelarTimer(); // Por seguridad, limpiar anterior
+        EquipoConTimer = equipo;
+        TiempoRestante = 10;
+        TimerActivo = true;
+        
+        _timer = new System.Timers.Timer(1000);
+        _timer.Elapsed += async (s, e) => {
+            if (TiempoRestante > 0)
+            {
+                TiempoRestante--;
+                NotifyStateChanged();
+            }
+            else
+            {
+                _timer.Stop();
+                TimerActivo = false;
+                // Si el tiempo llega a 0, marcar error automáticamente
+                if (!string.IsNullOrEmpty(EquipoConTimer))
+                {
+                    AgregarError(EquipoConTimer);
+                }
+                EquipoConTimer = null;
+                NotifyStateChanged();
+            }
+        };
+        _timer.Start();
+        NotifyStateChanged();
+    }
+
+    public void CancelarTimer()
+    {
+        if (_timer != null)
+        {
+            _timer.Stop();
+            _timer.Dispose();
+            _timer = null;
+        }
+        TimerActivo = false;
+        EquipoConTimer = null;
         NotifyStateChanged();
     }
 

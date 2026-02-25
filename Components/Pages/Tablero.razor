@@ -128,6 +128,16 @@
         </div>
     }
 
+    @if (Juego.TimerActivo)
+    {
+        <div class="timer-overlay">
+            <div class="timer-circulo">
+                <span class="timer-numero">@Juego.TiempoRestante</span>
+                <span class="timer-equipo">@Juego.EquipoConTimer</span>
+            </div>
+        </div>
+    }
+
     <img src="images/logoItesca.png" alt="Logo Esquina" class="logo-esquina-fijo" />
 </div>
 
@@ -243,6 +253,50 @@
         filter: drop-shadow(0 0 10px rgba(121, 242, 242, 0.4)); 
         pointer-events: none; 
     }
+
+    .timer-overlay {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2000;
+        pointer-events: none;
+    }
+
+    .timer-circulo {
+        width: 200px;
+        height: 200px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 8px solid #FFCB00;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 50px #FFCB00;
+        animation: pulse-timer 1s infinite;
+    }
+
+    .timer-numero {
+        font-size: 5rem;
+        font-weight: bold;
+        color: #FFCB00;
+        line-height: 1;
+    }
+
+    .timer-equipo {
+        font-size: 1.2rem;
+        color: white;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    @@keyframes pulse-timer {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.9; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
 
     .respuesta-puntos { border-left: 2px solid rgba(255,255,255,0.5); padding-left: 15px; }
 
