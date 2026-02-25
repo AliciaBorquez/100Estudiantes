@@ -39,6 +39,13 @@
                     @* Cuadro superior de la ronda (Más grande y más arriba) *@
                     <div class="caja-ronda" style="border-color: @colorMult; box-shadow: @sombraMult; color: @colorMult; animation: @animacionMult;">
                         @Juego.puntosPartida
+                        <br>
+                        
+                        @if (Juego.Multiplicador > 1) {
+                            <p style="font-size: 20px;">
+                                x @Juego.Multiplicador
+                            </p>
+                        }
                     </div>
 
                     @if (Juego.PreguntaRevelada)
@@ -120,6 +127,8 @@
             </h1>
         </div>
     }
+
+    <img src="images/logoItesca.png" alt="Logo Esquina" class="logo-esquina-fijo" />
 </div>
 
 <style>
@@ -221,6 +230,18 @@
     .caja-respuesta.revelada {
         background: linear-gradient(90deg, #D93DAF, #8124BF); color: white;
         box-shadow: 0 0 15px #D93DAF; border: 2px solid #D93DAF;
+    }
+
+    .logo-esquina-fijo {
+        position: absolute;
+        bottom: 20px;     
+        left: 20px;       
+        width: 120px;     
+        height: auto;
+        z-index: 50;      
+        opacity: 0.7;     
+        filter: drop-shadow(0 0 10px rgba(121, 242, 242, 0.4)); 
+        pointer-events: none; 
     }
 
     .respuesta-puntos { border-left: 2px solid rgba(255,255,255,0.5); padding-left: 15px; }
