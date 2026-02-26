@@ -196,6 +196,7 @@ public class JuegoService
     //Metodo para agregar error a un equipo
     public void AgregarError(string equipo)
     {
+        CancelarTimer();
         if (equipo == Equipo1 && ErroresEquipo1 < 3) ErroresEquipo1++;
         else if (equipo == Equipo2 && ErroresEquipo2 < 3) ErroresEquipo2++;
         
