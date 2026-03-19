@@ -5,7 +5,6 @@
 
 <PageTitle>Importar Contenido</PageTitle>
 
-@* === ENCABEZADO === *@
 <div class="d-flex flex-column mb-8">
     <MudText Typo="Typo.h2" Color="Color.Primary" Style="font-weight: bold; text-transform: uppercase;">
         Importar Preguntas y Respuestas
@@ -14,7 +13,6 @@
 
 <MudGrid Spacing="6">
     
-    @* === COLUMNA IZQUIERDA: INSTRUCCIONES === *@
     <MudItem xs="12" md="6">
         <MudPaper Elevation="8" Class="pa-6 rounded-lg h-100" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #79F2F2;">
             
@@ -29,7 +27,6 @@
                 El archivo debe ser un formato <strong>.CSV</strong> (delimitado por comas) con la siguiente estructura:
             </MudText>
 
-            @* Tabla de Ejemplo *@
             <MudSimpleTable Style="background-color: rgba(0,0,0,0.3); border: 1px solid #79F2F2;" Class="rounded-lg mb-6">
                 <thead>
                     <tr>
@@ -52,7 +49,6 @@
                 </tbody>
             </MudSimpleTable>
 
-            @* Advertencias *@
             <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined" Style="border-color: #FFFF00; color: #FFFF00; background-color: rgba(255, 255, 0, 0.05);">
                 <ul style="margin: 0; padding-left: 15px;">
                     <li>Los encabezados deben llamarse exactamente: <strong>Pregunta, Respuesta, Puntos</strong>.</li>
@@ -64,7 +60,6 @@
         </MudPaper>
     </MudItem>
 
-    @* === COLUMNA DERECHA: SUBIDA DE ARCHIVO === *@
     <MudItem xs="12" md="6">
         <MudPaper Elevation="8" Class="pa-6 rounded-lg h-100 d-flex flex-column" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #D93DAF;">
             
@@ -75,18 +70,17 @@
                 </MudText>
             </div>
 
-            @* Zona de carga personalizada (Ocultamos el feo InputFile original) *@
             <div class="d-flex flex-column align-center justify-center pa-8 mb-6" style="border: 2px dashed #8124BF; border-radius: 12px; background-color: rgba(0,0,0,0.3); min-height: 200px;">
                 
                 <InputFile id="fileInput" OnChange="CargarArchivoMemoria" accept=".csv" hidden />
                 
                 <MudButton HtmlTag="label" 
-                           for="fileInput" 
-                           Variant="Variant.Filled" 
-                           Color="Color.Tertiary" 
-                           StartIcon="@Icons.Material.Filled.AttachFile" 
-                           Size="Size.Large"
-                           Style="font-weight: bold; padding: 10px 24px;">
+                            for="fileInput" 
+                            Variant="Variant.Filled" 
+                            Color="Color.Tertiary" 
+                            StartIcon="@Icons.Material.Filled.AttachFile" 
+                            Size="Size.Large"
+                            Style="font-weight: bold; padding: 10px 24px;">
                     EXPLORAR ARCHIVOS
                 </MudButton>
                 
@@ -107,13 +101,12 @@
 
             <MudSpacer />
 
-            @* Botón de Subida a BD *@
             <MudButton Variant="Variant.Filled" 
-                       Color="Color.Primary" 
-                       Size="Size.Large" 
-                       OnClick="ProcesarArchivo" 
-                       Disabled="@(archivoSeleccionado == null || estaCargando)"
-                       Style="height: 60px; font-weight: bold; font-size: 1.2rem; border-radius: 8px;">
+                        Color="Color.Primary" 
+                        Size="Size.Large" 
+                        OnClick="ProcesarArchivo" 
+                        Disabled="@(archivoSeleccionado == null || estaCargando)"
+                        Style="height: 60px; font-weight: bold; font-size: 1.2rem; border-radius: 8px;">
                 @if (estaCargando)
                 {
                     <MudProgressCircular Class="ms-n1 mr-3" Size="Size.Small" Indeterminate="true" />
@@ -126,7 +119,6 @@
                 }
             </MudButton>
 
-            @* Mensajes de Estado (Reemplazan la clase de bootstrap y usan Severity de MudBlazor) *@
             @if (!string.IsNullOrEmpty(mensaje))
             {
                 <MudAlert Severity="@gravedadMensaje" Class="mt-6" Variant="Variant.Filled" Style="font-weight: bold;">
@@ -143,7 +135,6 @@
     private bool estaCargando = false;
     private string mensaje = "";
     
-    // Usamos el enumerador nativo de MudBlazor para controlar iconos y colores de alerta
     private Severity gravedadMensaje = Severity.Info;
 
     private void CargarArchivoMemoria(InputFileChangeEventArgs e)

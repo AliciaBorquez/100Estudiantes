@@ -12,86 +12,74 @@
 <PageTitle>Control Juego</PageTitle>
 
 <div class="d-flex flex-column mb-8">
-    @* Título gigante alineado a la izquierda *@
     <MudText Typo="Typo.h2" Color="Color.Primary" Style="font-weight: bold;">
         Panel de Control
     </MudText>
     
-    @* Botón vistoso alineado a la izquierda *@
     <MudButton Variant="Variant.Filled" 
-               Color="Color.Secondary" 
-               Size="Size.Large" 
-               StartIcon="@Icons.Material.Filled.Monitor" 
-               OnClick="AbrirVentana"
-               Class="mt-2"
-               Style="align-self: flex-start; border-radius: 8px; font-weight: bold; padding: 10px 24px;">
+                Color="Color.Secondary" 
+                Size="Size.Large" 
+                StartIcon="@Icons.Material.Filled.Monitor" 
+                OnClick="AbrirVentana"
+                Class="mt-2"
+                Style="align-self: flex-start; border-radius: 8px; font-weight: bold; padding: 10px 24px;">
         ABRIR TABLERO
     </MudButton>
 </div>
 
-@* === 2. CONFIGURACIÓN DE PARTIDA === *@
-@* Usamos un @if limpio en lugar de ocultar por CSS *@
 @if (!partidaEnCurso)
 {
     <MudPaper Elevation="8" Class="pa-6 rounded-lg mb-8" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #79F2F2;">
         
-        @* Subtítulo más pequeño que el principal *@
         <MudText Typo="Typo.h4" Color="Color.Info" Class="mb-6" Style="font-weight: bold;">
             Configuración de Partida
         </MudText>
 
-        @* MudGrid coloca automáticamente los inputs en una sola fila horizontal en pantallas grandes *@
         <MudGrid Spacing="4" Class="align-center">
             
-            @* Input Equipo 1 *@
             <MudItem xs="12" md="4">
                 <MudTextField @bind-Value="nombreTmp1" 
-                              Label="Nombre Equipo 1" 
-                              Variant="Variant.Outlined" 
-                              Adornment="Adornment.Start" 
-                              AdornmentIcon="@Icons.Material.Filled.Group" />
+                                Label="Nombre Equipo 1" 
+                                Variant="Variant.Outlined" 
+                                Adornment="Adornment.Start" 
+                                AdornmentIcon="@Icons.Material.Filled.Group" />
             </MudItem>
             
-            @* Input Equipo 2 *@
             <MudItem xs="12" md="4">
                 <MudTextField @bind-Value="nombreTmp2" 
-                              Label="Nombre Equipo 2" 
-                              Variant="Variant.Outlined" 
-                              Adornment="Adornment.Start" 
-                              AdornmentIcon="@Icons.Material.Filled.Group" />
+                                Label="Nombre Equipo 2" 
+                                Variant="Variant.Outlined" 
+                                Adornment="Adornment.Start" 
+                                AdornmentIcon="@Icons.Material.Filled.Group" />
             </MudItem>
 
-            @* Input Rondas *@
             <MudItem xs="12" md="4">
                 <MudNumericField @bind-Value="cantidadRondas" 
-                                 Label="Número de Rondas" 
-                                 Min="1" 
-                                 Variant="Variant.Outlined" 
-                                 Adornment="Adornment.Start" 
-                                 AdornmentIcon="@Icons.Material.Filled.FormatListNumbered" />
+                                    Label="Número de Rondas" 
+                                    Min="1" 
+                                    Variant="Variant.Outlined" 
+                                    Adornment="Adornment.Start" 
+                                    AdornmentIcon="@Icons.Material.Filled.FormatListNumbered" />
             </MudItem>
             
         </MudGrid>
 
-        @* Contenedor flex para empujar el botón de comenzar hacia la extrema derecha *@
         <div class="d-flex justify-end mt-6">
             <MudButton Variant="Variant.Filled" 
-                       Color="Color.Primary" 
-                       Size="Size.Large" 
-                       EndIcon="@Icons.Material.Filled.SportsEsports" 
-                       OnClick="ComenzarPartida"
-                       Style="border-radius: 8px; font-weight: bold; padding: 12px 30px;">
+                        Color="Color.Primary" 
+                        Size="Size.Large" 
+                        EndIcon="@Icons.Material.Filled.SportsEsports" 
+                        OnClick="ComenzarPartida"
+                        Style="border-radius: 8px; font-weight: bold; padding: 12px 30px;">
                 Comenzar Partida
             </MudButton>
         </div>
         
     </MudPaper>
 }
-@*Seccion de contenido de la partida*@
-@*Solo se muestra cuando hay una partida en curso*@
+
 @if (partidaEnCurso)
 {
-    @* === PANTALLA DE PARTIDA FINALIZADA === *@
     @if (Juego.PartidaTerminada) 
     {
         <MudPaper Elevation="8" Class="pa-8 rounded-lg" Style="background-color: rgba(5, 16, 38, 0.8); border: 2px dashed #79F2F2; text-align: center;">
@@ -134,12 +122,11 @@
             </MudButton>
         </MudPaper>
     }
-    @* === PARTIDA EN CURSO === *@
+
     else
     {
         <MudPaper Elevation="8" Class="pa-6 rounded-lg mb-8" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #79F2F2;">
             
-            @* Encabezado Ronda *@
             <div class="d-flex justify-space-between align-center mb-6">
                 <MudText Typo="Typo.h3" Color="Color.Info" Style="font-weight: bold;">
                     Ronda @rondaActual de @cantidadRondas
@@ -150,7 +137,6 @@
                 </MudButton>
             </div>
 
-            @* Puntos centrales *@
             <div class="d-flex flex-column align-center mb-8">
                 <MudText Typo="Typo.h5" Style="color: #ffffff; font-weight: 500;" Class="mb-3">Puntos de la Ronda</MudText>
                 <MudPaper Elevation="6" Class="pa-4 d-flex justify-center align-center rounded-lg" Style="background-color: #0820A6; border: 3px solid #D93DAF; min-width: 200px; min-height: 100px;">
@@ -158,7 +144,6 @@
                 </MudPaper>
             </div>
 
-            @* Tabla de Equipos *@
             <MudSimpleTable Style="background-color: rgba(0,0,0,0.2); border: 1px solid #8124BF;" Class="mb-6 rounded-lg">
                 <thead>
                     <tr>
@@ -180,7 +165,6 @@
 
             <MudDivider Class="my-6" Style="border-color: #8124BF; border-width: 2px;" />
 
-            @* Botón Generar o Mostrar Pregunta *@
             @if (string.IsNullOrEmpty(Juego.PreguntaActual))
             {
                 <div class="d-flex justify-end">
@@ -191,7 +175,6 @@
             }
             else
             {
-                @* Multiplicadores con colores jerárquicos *@
                 <div class="d-flex align-center justify-space-between mb-6 mt-4">
                     <MudText Typo="Typo.h3" Color="Color.Info" Style="font-weight: bold;">
                         Multiplicación de puntos
@@ -200,23 +183,21 @@
                     <div class="d-flex align-center gap-3">
                         @foreach (var m in new int[] { 1, 2, 3 })
                         {
-                            // Colores según magnitud: Info (Cian), Tertiary (Morado), Secondary (Rosa Neón)
                             Color colorActivo = m == 1 ? Color.Info : (m == 2 ? Color.Tertiary : Color.Secondary);
                             bool seleccionado = Juego.Multiplicador == m;
                             
                             <MudButton OnClick="() => Juego.SetMultiplicador(m)"
-                                       Disabled="@Juego.PreguntaRevelada"
-                                       Variant="@(seleccionado ? Variant.Filled : Variant.Outlined)"
-                                       Color="@(seleccionado ? colorActivo : Color.Default)"
-                                       Style="@(!seleccionado ? "color: white; border-color: rgba(255,255,255,0.3);" : "font-weight: bold;")"
-                                       Size="Size.Large">
+                                        Disabled="@Juego.PreguntaRevelada"
+                                        Variant="@(seleccionado ? Variant.Filled : Variant.Outlined)"
+                                        Color="@(seleccionado ? colorActivo : Color.Default)"
+                                        Style="@(!seleccionado ? "color: white; border-color: rgba(255,255,255,0.3);" : "font-weight: bold;")"
+                                        Size="Size.Large">
                                 x @m
                             </MudButton>
                         }
                     </div>
                 </div>
 
-                @* Caja de la Pregunta legible y Botón Revelar centrado *@
                 <MudPaper Elevation="4" Class="pa-8 mb-6 rounded-lg d-flex flex-column align-center" Style="background-color: rgba(0,0,0,0.5); border: 2px solid #8124BF;">
                     <MudText Typo="Typo.h4" Style="color: #ffffff; text-align: center; font-weight: bold;" Class="mb-8">
                         @Juego.PreguntaActual
@@ -225,11 +206,11 @@
                     @if (!Juego.PreguntaRevelada)
                     {
                         <MudButton Variant="Variant.Filled" 
-                                   Color="Color.Secondary" 
-                                   Size="Size.Large" 
-                                   StartIcon="@Icons.Material.Filled.Visibility"
-                                   OnClick="() => Juego.RevelarPregunta()"
-                                   Style="border-radius: 8px; font-weight: bold; padding: 15px 40px; font-size: 1.2rem;">
+                                    Color="Color.Secondary" 
+                                    Size="Size.Large" 
+                                    StartIcon="@Icons.Material.Filled.Visibility"
+                                    OnClick="() => Juego.RevelarPregunta()"
+                                    Style="border-radius: 8px; font-weight: bold; padding: 15px 40px; font-size: 1.2rem;">
                             REVELAR PREGUNTA AL TABLERO
                         </MudButton>
                     }
@@ -241,10 +222,8 @@
                     }
                 </MudPaper>
 
-                @* Respuestas, Errores y Puntos *@
                 @if (Juego.PreguntaRevelada) 
                 {
-                    @* CONTENEDOR FLEX PARA TÍTULO Y BOTÓN TIMER *@
                     <div class="d-flex justify-space-between align-center mb-4">
                         <MudText Typo="Typo.h5" Style="color: white; font-weight: bold;">
                             Respuestas (Presiona para revelar)
@@ -278,9 +257,9 @@
                             bool revelada = Juego.RespuestasReveladas.Contains(respuesta.res_respuesta);
                             <MudItem xs="12" sm="6">
                                 <MudButton FullWidth="true" 
-                                           Variant="Variant.Filled"
-                                           OnClick="() => Juego.RevelarRespuestaPorTexto(respuesta.res_respuesta)"
-                                           Style="@(revelada ? "background-color: #28a745; color: white; justify-content: flex-start; padding: 15px;" : "background-color: #0820A6; color: white; justify-content: flex-start; padding: 15px; border: 1px solid #79F2F2;")">
+                                            Variant="Variant.Filled"
+                                            OnClick="() => Juego.RevelarRespuestaPorTexto(respuesta.res_respuesta)"
+                                            Style="@(revelada ? "background-color: #28a745; color: white; justify-content: flex-start; padding: 15px;" : "background-color: #0820A6; color: white; justify-content: flex-start; padding: 15px; border: 1px solid #79F2F2;")">
                                     <div class="d-flex justify-space-between" style="width: 100%;">
                                         <span style="font-weight: bold; font-size: 1.1rem;">@respuesta.res_respuesta</span>
                                         <span>
@@ -338,13 +317,12 @@
                     </MudPaper>
                 }
 
-                @* BOTÓN SALTAR RONDA (Alineado a la extrema derecha) *@
                 <div class="d-flex justify-end mt-8">
                     <MudButton Variant="Variant.Filled" 
-                               Color="Color.Primary" 
-                               EndIcon="@Icons.Material.Filled.SkipNext" 
-                               OnClick="SiguienteRonda"
-                               Style="border-radius: 8px; font-weight: bold; padding: 10px 24px;">
+                                Color="Color.Primary" 
+                                EndIcon="@Icons.Material.Filled.SkipNext" 
+                                OnClick="SiguienteRonda"
+                                Style="border-radius: 8px; font-weight: bold; padding: 10px 24px;">
                         @(rondaActual < cantidadRondas ? "Saltar Ronda" : "FINALIZAR Y VER GANADOR")
                     </MudButton>
                 </div>
@@ -354,20 +332,14 @@
 }
 
 @code {
-    //Nombre del equipo 1
     private string nombreTmp1 = "";
-    //Nombre del equipo 2
     private string nombreTmp2 = "";
 
-    //Cantidad de rondas de la partida, por defecto 3
     private int cantidadRondas = 3;
-    //Numero de ronda actual
     private int rondaActual = 0;
 
-    //Verificador si la partida esta en curso
     private bool partidaEnCurso = false;
 
-    //Lista de preguntas usadas para no repetirlas
     private List<int> preguntasUsadas = new List<int>();
 
     protected override void OnInitialized()
@@ -375,7 +347,6 @@
         Juego.OnChange += ManejarCambioEstado;
     }
 
-    // Creamos un método dedicado para invocar el cambio
     private async void ManejarCambioEstado()
     {
         try
@@ -385,7 +356,6 @@
         }
         catch (Exception)
         {
-            // Manejo silencioso en caso de que el circuito se haya cerrado
         }
     }
 
@@ -394,7 +364,6 @@
         Juego.OnChange -= ManejarCambioEstado;
     }
 
-    //Metodo para comenzar partida
     private void ComenzarPartida()
     {
         if (string.IsNullOrWhiteSpace(nombreTmp1) || string.IsNullOrWhiteSpace(nombreTmp2) || cantidadRondas <= 0)
@@ -408,7 +377,6 @@
         Juego.LimpiarPregunta(); 
     }
 
-    //Metodo para cambiar de ronda
     private void SiguienteRonda()
     {
         if (rondaActual < cantidadRondas)
@@ -422,7 +390,6 @@
         }
     }
 
-    //Metodo de resetear para una nueva partida
     private void ResetearParaNuevaPartida()
     {
         partidaEnCurso = false;
@@ -433,14 +400,12 @@
         Juego.ReiniciarTodo();
     }
 
-    //Metodo para finalizar la partida
     private void FinalizarPartida()
     {
         Juego.FinalizarPartida();
 
     }
 
-    //Metodo para cargar una pregunta aleatoria
     private void CargarPreguntaAleatoria()
     {
         var preguntasDisponibles = DbContext.Preguntas
@@ -464,7 +429,6 @@
         }
     }
 
-    //Metodo para abrir el tablero en otra ventana
     private async Task AbrirVentana()
     {
         await JSRuntime.InvokeVoidAsync("openWindow", "/tablero", "Nueva Ventana", 1366, 768);

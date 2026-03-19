@@ -7,7 +7,6 @@
 
 <PageTitle>Gestion Preguntas</PageTitle>
 
-@* === ENCABEZADO === *@
 <div class="d-flex flex-column mb-6">
     <MudText Typo="Typo.h2" Color="Color.Primary" Style="font-weight: bold; text-transform: uppercase;">
         Gestión de Contenido
@@ -18,7 +17,6 @@
     </MudText>
 </div>
 
-@* === INDICADOR DE CARGA === *@
 @if (preguntas == null)
 {
     <div class="d-flex justify-center my-8">
@@ -27,39 +25,33 @@
 }
 else
 {
-    @* === CONTENEDOR PRINCIPAL CON BUSCADOR === *@
     <MudPaper Elevation="8" Class="pa-6 rounded-lg mb-8" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #8124BF;">
         
-        @* Barra de búsqueda *@
         <MudTextField @bind-Value="textoBusqueda" 
-                      Label="Buscar pregunta..." 
-                      Variant="Variant.Outlined" 
-                      Adornment="Adornment.Start" 
-                      AdornmentIcon="@Icons.Material.Filled.Search"
-                      IconSize="Size.Medium"
-                      Clearable="true"
-                      Immediate="true"
-                      Class="mb-6" />
+                        Label="Buscar pregunta..." 
+                        Variant="Variant.Outlined" 
+                        Adornment="Adornment.Start" 
+                        AdornmentIcon="@Icons.Material.Filled.Search"
+                        IconSize="Size.Medium"
+                        Clearable="true"
+                        Immediate="true"
+                        Class="mb-6" />
 
-        @* Lista de preguntas filtradas *@
         @foreach (var p in PreguntasFiltradas)
         {
             <MudPaper Elevation="4" Class="mb-4 rounded-lg overflow-hidden" Style="background-color: rgba(0,0,0,0.4); border: 1px solid #79F2F2;">
                 
-                @* === CABECERA DE LA PREGUNTA (Clickeable) === *@
                 <div class="d-flex justify-space-between align-center pa-4" 
-                     style="cursor:pointer; background: @(preguntaAbiertaId == p.pr_id ? "rgba(121, 242, 242, 0.15)" : "rgba(0,0,0,0.2)"); transition: background 0.3s ease;" 
-                     @onclick="() => Alternar(p.pr_id)">
+                        style="cursor:pointer; background: @(preguntaAbiertaId == p.pr_id ? "rgba(121, 242, 242, 0.15)" : "rgba(0,0,0,0.2)"); transition: background 0.3s ease;" 
+                        @onclick="() => Alternar(p.pr_id)">
                     
                     <MudText Typo="Typo.h6" Style="color: white; font-weight: bold;">@p.pr_pregunta</MudText>
                     <MudIcon Icon="@(preguntaAbiertaId == p.pr_id ? Icons.Material.Filled.RemoveCircleOutline : Icons.Material.Filled.AddCircleOutline)" Color="Color.Info" />
                 </div>
 
-                @* === CUERPO COLAPSABLE DE LA PREGUNTA === *@
                 <MudCollapse Expanded="@(preguntaAbiertaId == p.pr_id)">
                     <div class="pa-6" style="border-top: 1px solid #79F2F2;">
                         
-                        @* Edición de la pregunta y botones de acción *@
                         <div class="d-flex gap-4 mb-6 align-center flex-wrap">
                             <div style="flex-grow: 1;">
                                 <MudTextField @bind-Value="p.pr_pregunta" Variant="Variant.Outlined" Label="Modificar texto de la pregunta" FullWidth="true" />
@@ -72,7 +64,6 @@ else
                             </MudButton>
                         </div>
 
-                        @* Edición de las respuestas (Neón Rosa) *@
                         <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mb-3" Style="font-weight: bold; text-transform: uppercase;">
                             Respuestas Asociadas
                         </MudText>
@@ -126,15 +117,12 @@ else
     private Dictionary<int, List<Respuesta>> respDict = new();
     private int? preguntaAbiertaId;
 
-    // --- NUEVA LÓGICA DE BÚSQUEDA ---
     private string textoBusqueda = "";
 
-    // Propiedad calculada que filtra la lista automáticamente cuando escribes en la barra
     private IEnumerable<Pregunta> PreguntasFiltradas =>
         string.IsNullOrWhiteSpace(textoBusqueda) || preguntas == null
             ? preguntas ?? Enumerable.Empty<Pregunta>()
             : preguntas.Where(p => p.pr_pregunta.Contains(textoBusqueda, StringComparison.OrdinalIgnoreCase));
-    // --------------------------------
 
     protected override async Task OnInitializedAsync() => await CargarDatos();
 

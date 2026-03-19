@@ -1,18 +1,17 @@
 @page "/preguntas"
 @using CienEstudiantesDijeron.Data
 @using CienEstudiantesDijeron.Models
+@using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext DbContext
 
 <PageTitle>Lista de Preguntas</PageTitle>
 
-@* === ENCABEZADO === *@
 <div class="d-flex flex-column mb-8">
     <MudText Typo="Typo.h2" Color="Color.Primary" Style="font-weight: bold; text-transform: uppercase;">
         Lista de Preguntas y Respuestas
     </MudText>
 </div>
 
-@* === SECCIÓN DE PREGUNTAS (Estilo Cian) === *@
 <MudPaper Elevation="8" Class="pa-6 rounded-lg mb-8" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #79F2F2;">
     <MudText Typo="Typo.h4" Color="Color.Info" Class="mb-6" Style="font-weight: bold;">
         Preguntas Registradas
@@ -46,7 +45,6 @@
     }
 </MudPaper>
 
-@* === SECCIÓN DE RESPUESTAS (Estilo Rosa Neón) === *@
 <MudPaper Elevation="8" Class="pa-6 rounded-lg mb-8" Style="background-color: rgba(5, 16, 38, 0.6); border: 1px solid #D93DAF;">
     <MudText Typo="Typo.h4" Color="Color.Secondary" Class="mb-6" Style="font-weight: bold;">
         Respuestas Registradas
@@ -86,10 +84,9 @@
     private List<Pregunta>? preguntas;
     private List<Respuesta>? respuestas;
 
-    // Cambiado de OnInitializedAsync a OnInitialized para evitar el warning CS1998
     protected override void OnInitialized()
     {
-        preguntas = DbContext.Preguntas.ToList();
-        respuestas = DbContext.Respuestas.ToList();
+        preguntas = DbContext.Preguntas.AsNoTracking().ToList();
+        respuestas = DbContext.Respuestas.AsNoTracking().ToList();
     }
 }

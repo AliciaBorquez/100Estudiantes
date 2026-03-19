@@ -31,14 +31,11 @@ namespace CienEstudiantesDijeron.Services
 
             foreach (var grupo in grupos)
             {
-                // Insertar la Pregunta
                 var nuevaPregunta = new Pregunta { pr_pregunta = grupo.Key.ToString() };
                 _context.Preguntas.Add(nuevaPregunta);
                 
-                // Guardamos para obtener el ID generado por SQLite
                 await _context.SaveChangesAsync(); 
 
-                // Insertar sus Respuestas
                 foreach (var fila in grupo)
                 {
                     var nuevaRespuesta = new Respuesta
@@ -50,7 +47,6 @@ namespace CienEstudiantesDijeron.Services
                     _context.Respuestas.Add(nuevaRespuesta);
                 }
             }
-            // Guardamos todas las respuestas
             await _context.SaveChangesAsync();
         }
     }

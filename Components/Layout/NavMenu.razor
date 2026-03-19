@@ -1,43 +1,40 @@
 ﻿<MudAppBar Elevation="4" Fixed="true">
     
-    @* LOGO (Mantiene su altura y proporción) *@
     <a href="/" class="d-flex align-center">
         <MudImage Src="images/titulo.png" 
-                  Alt="100 Estudiantes Dijeron" 
-                  Height="45" 
-                  ObjectFit="ObjectFit.Contain" 
-                  Class="mr-4" />
+                    Alt="100 Estudiantes Dijeron" 
+                    Height="45" 
+                    ObjectFit="ObjectFit.Contain" 
+                    Class="mr-4" />
     </a>
 
     <MudSpacer />
 
-    @* BOTONES DIRECTOS *@
     <MudButton Href="/" 
-               Variant="Variant.Text" 
-               Color="Color.Info" 
-               StartIcon="@Icons.Material.Filled.Dashboard" 
-               Class="mx-1">
+                Variant="Variant.Text" 
+                Color="Color.Info" 
+                StartIcon="@Icons.Material.Filled.Dashboard" 
+                Class="mx-1">
         Control
     </MudButton>
 
     <MudButton Href="/tablero" 
-               Variant="Variant.Text" 
-               Color="Color.Info" 
-               StartIcon="@Icons.Material.Filled.Tv" 
-               Class="mx-1">
+                Variant="Variant.Text" 
+                Color="Color.Info" 
+                StartIcon="@Icons.Material.Filled.Tv" 
+                Class="mx-1">
         Tablero
     </MudButton>
 
-    @* MENÚ DESPLEGABLE *@
     <MudMenu Label="Preguntas" 
-             Color="Color.Info" 
-             Variant="Variant.Text" 
-             StartIcon="@Icons.Material.Filled.Quiz" 
-             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" 
-             AnchorOrigin="Origin.BottomRight" 
-             TransformOrigin="Origin.TopRight" 
-             Class="mx-1">
-             
+                Color="Color.Info" 
+                Variant="Variant.Text" 
+                StartIcon="@Icons.Material.Filled.Quiz" 
+                EndIcon="@Icons.Material.Filled.KeyboardArrowDown" 
+                AnchorOrigin="Origin.BottomRight" 
+                TransformOrigin="Origin.TopRight" 
+                Class="mx-1">
+                
         <MudMenuItem Href="/preguntas" Icon="@Icons.Material.Filled.List">
             Ver Preguntas
         </MudMenuItem>

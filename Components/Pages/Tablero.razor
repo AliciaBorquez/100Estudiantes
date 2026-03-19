@@ -8,10 +8,8 @@
 
 <div class="tablero-container">
     
-    @* === LAYOUT PRINCIPAL (Izquierda, Centro, Derecha) === *@
     <div class="layout-principal">
         
-        @* === LATERAL IZQUIERDO (EQUIPO 1) === *@
         <div class="panel-lateral">
             <div class="caja-nombre borde-rosa">
                 @Juego.Equipo1
@@ -24,9 +22,7 @@
             </div>
         </div>
 
-        @* === ZONA CENTRAL === *@
         <div class="panel-central">
-            @* Círculo gigante oscurecido y agrandado *@
             <div class="circulo-decorativo"></div>
 
             <div class="contenido-central">
@@ -36,7 +32,6 @@
                     string sombraMult = Juego.Multiplicador == 3 ? "0 0 30px #D93DAF, inset 0 0 15px #D93DAF" : (Juego.Multiplicador == 2 ? "0 0 20px #8124BF, inset 0 0 10px #8124BF" : "0 0 10px rgba(121, 242, 242, 0.5)");
                     string animacionMult = Juego.Multiplicador == 3 ? "latido-fuerte 0.8s infinite" : (Juego.Multiplicador == 2 ? "pulse 1.5s infinite" : "none");
 
-                    @* Cuadro superior de la ronda (Más grande y más arriba) *@
                     <div class="caja-ronda" style="border-color: @colorMult; box-shadow: @sombraMult; color: @colorMult; animation: @animacionMult;">
                         @Juego.puntosPartida
                         <br>
@@ -52,7 +47,6 @@
                     {
                         <h1 class="texto-pregunta">@Juego.PreguntaActual</h1>
 
-                        @* Contenedor sólido/casi sólido detrás de las respuestas *@
                         <div class="contenedor-respuestas-fondo">
                             <div class="respuestas-grid">
                                 @for (int i = 0; i < Juego.RespuestasActuales.Count; i++)
@@ -83,7 +77,6 @@
             </div>
         </div>
 
-        @* === LATERAL DERECHO (EQUIPO 2) === *@
         <div class="panel-lateral">
             <div class="caja-nombre borde-lila">
                 @Juego.Equipo2
@@ -98,7 +91,6 @@
 
     </div>
 
-    @* === MARCA DE ERROR === *@
     @if (Juego.MostrarX)
     {
         <div class="pantalla-error">
@@ -106,7 +98,6 @@
         </div>
     }
 
-    @* === FIN DE PARTIDA RESPONSIVO === *@
     @if (Juego.PartidaTerminada)
     {
         <div class="pantalla-fin">
@@ -164,7 +155,6 @@
         width: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; z-index: 10;
     }
 
-    /* Textos en mayúscula y diseño lateral */
     .caja-nombre {
         background: rgba(0, 0, 0, 0.75); width: 90%; padding: 10px 20px; text-align: center;
         border-radius: 10px; font-size: 1.5rem; font-weight: bold; text-transform: uppercase;
@@ -191,7 +181,6 @@
         flex-grow: 1; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 40px;
     }
 
-    /* CÍRCULO GIGANTE Y MÁS OSCURO */
     .circulo-decorativo {
         position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
         width: 85vh; height: 85vh; border-radius: 50%; background: rgba(2, 5, 12, 0.55);
@@ -203,7 +192,6 @@
         z-index: 10; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
 
-    /* CAJA DE RONDA (Más arriba y más grande) */
     .caja-ronda {
         background: rgba(0, 0, 0, 0.8); border: 3px solid; padding: 15px 50px; border-radius: 15px;
         font-size: 6.5rem; font-weight: bold; text-align: center; margin-bottom: 30px; margin-top: -45px;
@@ -215,7 +203,6 @@
         text-shadow: 2px 2px 5px black, 0 0 10px rgba(255,255,255,0.5); max-width: 90%;
     }
 
-    /* CONTENEDOR SÓLIDO PARA RESPUESTAS */
     .contenedor-respuestas-fondo {
         background: rgba(5, 10, 20, 0.85); padding: 30px 40px; border-radius: 20px;
         border: 1px solid rgba(255, 255, 0, 0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.8);
@@ -226,7 +213,6 @@
         display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%;
     }
 
-    /* CAJA RESPUESTA: AMARILLO NEÓN POR DEFECTO */
     .caja-respuesta {
         height: 65px; border: 2px solid #FFCB00; display: flex; align-items: center; justify-content: space-between;
         padding: 0 20px; font-size: 1.5rem; font-weight: bold; border-radius: 8px; text-shadow: 1px 1px 3px black;
@@ -307,7 +293,6 @@
     .pantalla-error { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); }
     .x-gigante { font-size: 35rem; color: #ff0000; text-shadow: 0 0 50px #ff0000, 0 0 100px #ff0000; animation: shake 0.5s; margin: 0; line-height: 1; }
     
-    /* PANTALLA FIN RESPONSIVA Y MAYÚSCULAS */
     .pantalla-fin { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 16, 38, 0.95); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
     .titulo-fin { font-size: clamp(3rem, 6vw, 6rem); color: #ffff00; text-shadow: 0 0 20px #ffff00; margin-bottom: 20px; }
     .resumen-fin { display: flex; gap: clamp(20px, 4vw, 80px); margin: 40px 0; align-items: center; justify-content: center; flex-wrap: wrap; }
